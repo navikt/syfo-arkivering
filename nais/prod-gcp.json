@@ -1,0 +1,7 @@
+{
+  "app": "spinnsyn-arkivering",
+  "namespace": "flex",
+  "team": "flex",
+  "kafkaPool": "nav-prod",
+  "azureTenant": "nav.no"
+}

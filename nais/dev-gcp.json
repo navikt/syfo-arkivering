@@ -1,0 +1,7 @@
+{
+  "app": "spinnsyn-arkivering",
+  "namespace": "flex",
+  "team": "flex",
+  "kafkaPool": "nav-dev",
+  "azureTenant": "trygdeetaten.no"
+}
