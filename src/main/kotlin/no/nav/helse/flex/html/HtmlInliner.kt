@@ -18,6 +18,7 @@ class HtmlInliner(
         doc.select("link").forEach {
             val rel = it.attr("rel")
             if (rel != "stylesheet") {
+                it.remove()
                 return@forEach
             }
             if (it.hasAttr("href")) {
