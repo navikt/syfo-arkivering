@@ -12,6 +12,10 @@ spec:
     max: 1
     cpuThresholdPercentage: 90
   port: 8080
+  {{#if ingress}}
+  ingresses:
+    - {{ingress}}
+  {{/if}}
   liveness:
     path: /internal/health
     initialDelay: 10
@@ -39,10 +43,19 @@ spec:
         databases:
           - name: spinnsyn-arkivering-db
             diskAutoresize: true
+  accessPolicy:
+    outbound:
+      rules:
+        - application: spinnsyn-frontend-arkivering
   kafka:
     pool: {{kafkaPool}}
   azure:
     application:
       enabled: true
       tenant: {{azureTenant}}
+  env:
+  {{#each env}}
+     - name: {{@key}}
+       value: {{this}}
+  {{/each}}
 

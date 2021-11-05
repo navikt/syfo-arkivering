@@ -21,4 +21,16 @@ KAFKA_SCHEMA_REGISTRY_PASSWORD: ""
 
 
 logging.config: "classpath:logback-local.xml"
+spinnsyn.frontend.arkivering.url: "http://spinnsyn-frontend-arkivering"
 
+no.nav.security.jwt:
+  client:
+    registration:
+      spinnsyn-frontend-arkivering-credentials:
+        token-endpoint-url: http://localhost:${mock-oauth2-server.port}/azureator/token
+        grant-type: client_credentials
+        scope: spinnsyn-frontend-arkivering
+        authentication:
+          client-id: client-id
+          client-secret: secretzz
+          client-auth-method: client_secret_basic

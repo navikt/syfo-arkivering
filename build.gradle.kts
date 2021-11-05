@@ -40,6 +40,7 @@ val logstashLogbackEncoderVersion = "6.6"
 val kluentVersion = "1.68"
 val openHtmlToPdfVersion = "1.0.10"
 val verapdfVersion = "1.18.8"
+val jsoupVersion = "1.14.3"
 
 dependencies {
     implementation("org.springframework.boot:spring-boot-starter")
@@ -65,6 +66,7 @@ dependencies {
     implementation("com.openhtmltopdf:openhtmltopdf-slf4j:$openHtmlToPdfVersion")
     implementation("com.openhtmltopdf:openhtmltopdf-svg-support:$openHtmlToPdfVersion")
     implementation("org.verapdf:validation-model:$verapdfVersion")
+    implementation("org.jsoup:jsoup:$jsoupVersion")
 
     testImplementation("org.springframework.boot:spring-boot-starter-test")
     testImplementation("org.testcontainers:kafka:$testContainersVersion")
