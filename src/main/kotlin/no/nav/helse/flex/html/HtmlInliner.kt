@@ -64,6 +64,14 @@ class HtmlInliner(
                 it.attr("src", "data:image/svg+xml;base64,$b64img")
             }
         }
+        val arkHeader = doc.selectFirst("#ark-header") ?: throw RuntimeException("Må ha ark header")
+        val arkFooter = doc.selectFirst("#ark-footer") ?: throw RuntimeException("Må ha ark footer")
+        val body = doc.selectFirst("body") ?: throw RuntimeException("Må ha html body")
+        arkHeader.remove()
+        arkFooter.remove()
+        body.child(0).before(arkHeader)
+        body.appendChild(arkFooter)
+
         doc.outputSettings().syntax(Document.OutputSettings.Syntax.xml)
 
         return doc.toString()
