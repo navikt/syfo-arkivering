@@ -16,6 +16,10 @@ class HtmlInliner(
 
         val doc = Jsoup.parse(html)
         doc.select("link").forEach {
+            val rel = it.attr("rel")
+            if (rel != "stylesheet") {
+                return@forEach
+            }
             if (it.hasAttr("href")) {
                 val href = it.attr("href")
                 if (!href.endsWith(".css")) {
