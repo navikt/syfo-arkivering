@@ -16,13 +16,18 @@ class Arkivaren(
     }
 
     fun hentPdf(fnr: String, utbetalingId: String): ByteArray {
+
+        val html = hentSomHtmlOgInlineTing(fnr, utbetalingId)
+
+        return hentPdfFraHTml(html)
+    }
+
+    fun hentPdfFraHTml(html: String): ByteArray {
         val nyDoctype = """
             <!DOCTYPE html PUBLIC
  "-//OPENHTMLTOPDF//DOC XHTML Character Entities Only 1.0//EN" "">
         """.trimIndent()
 
-        val html = hentSomHtmlOgInlineTing(fnr, utbetalingId).replaceFirst("<!DOCTYPE html>", nyDoctype)
-
-        return createPDFA(html)
+        return createPDFA(html.replaceFirst("<!DOCTYPE html>", nyDoctype))
     }
 }
