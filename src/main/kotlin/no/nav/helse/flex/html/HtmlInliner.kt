@@ -38,6 +38,10 @@ class HtmlInliner(
         * {
             font-family: "Source Sans Pro" !important;
         }
+        #__next {
+            margin: 0cm 0.7cm;
+            height: 850px;
+        }
     </style>            
         """
         doc.select("head").forEach {
@@ -72,6 +76,13 @@ class HtmlInliner(
         val arkHeader = doc.selectFirst("#ark-header") ?: throw RuntimeException("Må ha ark header")
         val arkFooter = doc.selectFirst("#ark-footer") ?: throw RuntimeException("Må ha ark footer")
         val body = doc.selectFirst("body") ?: throw RuntimeException("Må ha html body")
+        if (body.children().size != 1) {
+            throw RuntimeException("Forventa bare en child til body")
+        }
+        val first = body.children().first()!!
+        if (!first.hasAttr("id") || first.attr("id") != "__next") {
+            throw RuntimeException("Forventa at første child har id __next")
+        }
         arkHeader.remove()
         arkFooter.remove()
         body.child(0).before(arkHeader)
