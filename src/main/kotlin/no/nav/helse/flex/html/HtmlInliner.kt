@@ -26,7 +26,7 @@ class HtmlInliner(
                 if (!href.endsWith(".css")) {
                     throw RuntimeException("Link med href som ikke er .css")
                 }
-                val stylesheet = URL(url + href).readText()
+                val stylesheet = URL(url + href).readText().replace("@media print", "@media papirprint")
                 it.parent()?.append("<style>\n$stylesheet\n</style>")
                 it.remove()
             } else {
