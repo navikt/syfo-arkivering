@@ -1,5 +1,6 @@
 package no.nav.helse.flex.arkivering
 
+import io.micrometer.core.instrument.MeterRegistry
 import no.nav.helse.flex.client.DokArkivClient
 import no.nav.helse.flex.client.SpinnsynFrontendArkiveringClient
 import no.nav.helse.flex.config.EnvironmentToggles
@@ -18,6 +19,7 @@ class Arkivaren(
     val dokArkivClient: DokArkivClient,
     val environmentToggles: EnvironmentToggles,
     val arkivertVedtakRepository: ArkivertVedtakRepository,
+    val registry: MeterRegistry,
     @Value("\${nais.app.image}")
     val naisAppImage: String
 ) {
@@ -53,7 +55,7 @@ class Arkivaren(
         val hentPdf = hentPdf(fnr = vedtak.fnr, utbetalingId = vedtak.id)
 
         if (environmentToggles.isProduction()) {
-            log.info("Arkiverer ikke vedak ${vedtak.id} fordi vi ikke har skrudd dette på i produksjon ennå")
+            log.info("Arkiverer ikke vedtak ${vedtak.id} fordi vi ikke har skrudd dette på i produksjon ennå")
             return 0
         }
 
@@ -75,7 +77,8 @@ class Arkivaren(
                 spinnsynFrontendImage = hentPdf.second
             )
         )
-
+        log.info("Arkiverte vedtak ${vedtak.id}")
+        registry.counter("vedtak_arkivert")
         return 1
     }
 }

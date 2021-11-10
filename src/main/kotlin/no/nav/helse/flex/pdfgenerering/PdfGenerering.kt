@@ -2,7 +2,9 @@ package no.nav.helse.flex.pdfgenerering
 
 import com.fasterxml.jackson.module.kotlin.readValue
 import com.openhtmltopdf.pdfboxout.PdfRendererBuilder
+import com.openhtmltopdf.slf4j.Slf4jLogger
 import com.openhtmltopdf.svgsupport.BatikSVGDrawer
+import com.openhtmltopdf.util.XRLog
 import no.nav.helse.flex.logger
 import no.nav.helse.flex.objectMapper
 import org.apache.pdfbox.io.IOUtils
@@ -16,6 +18,10 @@ object PdfGenerering {
     val fonts: List<FontMetadata> = objectMapper.readValue(this::class.java.getResourceAsStream("/fonts/config.json"))
 
     val log = logger()
+
+    init {
+        XRLog.setLoggerImpl(Slf4jLogger())
+    }
 
     fun createPDFA(html: String): ByteArray {
         val pdf = ByteArrayOutputStream().apply {
