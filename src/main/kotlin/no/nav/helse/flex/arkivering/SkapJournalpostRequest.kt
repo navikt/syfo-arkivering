@@ -34,6 +34,7 @@ fun skapJournalpostRequest(
         sak = Sak(
             sakstype = "GENERELL_SAK"
         ),
+        journalpostType = "UTGAAENDE",
         journalfoerendeEnhet = "9999",
         eksternReferanseId = vedtakStatus.id,
         tema = "SYK",
