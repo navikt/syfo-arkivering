@@ -5,6 +5,8 @@
   "kafkaPool": "nav-prod",
   "azureTenant": "nav.no",
   "env": {
-    "SPINNSYN_FRONTEND_ARKIVERING_AAD_CLIENT_ID": "prod-gcp.flex.spinnsyn-frontend-arkivering"
+    "SPINNSYN_FRONTEND_ARKIVERING_AAD_CLIENT_ID": "prod-gcp.flex.spinnsyn-frontend-arkivering",
+    "DOKARKIV_AAD_CLIENT_ID": "162b3255-2f72-4399-8f7a-244add9ffaac",
+    "DOKARKIV_URL": "https://dokarkiv.prod-fss-pub.nais.io"
   }
 }

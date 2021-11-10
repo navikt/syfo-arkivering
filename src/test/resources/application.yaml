@@ -34,3 +34,15 @@ no.nav.security.jwt:
           client-id: client-id
           client-secret: secretzz
           client-auth-method: client_secret_basic
+      dokarkiv-client-credentials:
+        token-endpoint-url: http://localhost:${mock-oauth2-server.port}/azureator/token
+        grant-type: client_credentials
+        scope: dokarkiv
+        authentication:
+          client-id: client-id
+          client-secret: secretzz
+          client-auth-method: client_secret_basic
+
+dokarkiv.url: "http://dokarkiv"
+nais.cluster: test
+nais.app.image: docker.github/spinnsyn-arkivering-v2.0

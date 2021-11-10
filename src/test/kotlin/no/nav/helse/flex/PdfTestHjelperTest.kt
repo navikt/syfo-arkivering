@@ -1,11 +1,10 @@
 package no.nav.helse.flex
 
-import no.nav.helse.flex.vedtak.Arkivaren
+import no.nav.helse.flex.arkivering.Arkivaren
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import java.io.File
 import java.time.OffsetDateTime
-import java.util.*
 
 class PdfTestHjelperTest : Testoppsett() {
 
@@ -20,7 +19,7 @@ class PdfTestHjelperTest : Testoppsett() {
 
         val file = File("pdf-tests/test.html")
         if (file.exists()) {
-            val pdf = arkivaren.hentPdfFraHTml(file.readText())
+            val pdf = arkivaren.hentPdfFraHtml(file.readText())
             File("pdf-tests/" + OffsetDateTime.now().toString() + ".pdf").writeBytes(pdf)
         }
     }

@@ -18,7 +18,7 @@ class SpinnsynFrontendArkiveringClient(
 
     val log = logger()
 
-    fun hentVedtakSomHtml(utbetalingId: String, fnr: String): String {
+    fun hentVedtakSomHtml(utbetalingId: String, fnr: String): HtmlVedtak {
 
         val uriBuilder = UriComponentsBuilder.fromHttpUrl("$url/syk/sykepenger/vedtak/arkivering/$utbetalingId")
 
@@ -39,10 +39,16 @@ class SpinnsynFrontendArkiveringClient(
             throw RuntimeException(message)
         }
 
-        result.body?.let { return it }
+        val versjon = result.headers["x-nais-app-image"]?.first() ?: "UKJENT"
+        result.body?.let { return HtmlVedtak(html = it, versjon = versjon) }
 
         val message = "Kall mot spinnsyn-frontend-arkivering returnerer ikke data"
         log.error(message)
         throw RuntimeException(message)
     }
+
+    class HtmlVedtak(
+        val html: String,
+        val versjon: String,
+    )
 }
