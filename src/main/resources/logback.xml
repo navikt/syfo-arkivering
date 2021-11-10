@@ -11,5 +11,6 @@
         <appender-ref ref="stdout_json"/>
     </logger>
 
+    <logger name="com.openhtmltopdf" level="ERROR"/>
     <logger name="org.springframework" level="INFO"/>
 </configuration>

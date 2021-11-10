@@ -13,5 +13,6 @@
         <appender-ref ref="CONSOLE"/>
     </logger>
 
+    <logger name="com.openhtmltopdf" level="ERROR"/>
     <logger name="org.springframework" level="INFO"/>
 </configuration>
