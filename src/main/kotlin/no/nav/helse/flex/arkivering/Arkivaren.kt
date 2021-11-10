@@ -78,7 +78,7 @@ class Arkivaren(
             )
         )
         log.info("Arkiverte vedtak ${vedtak.id}")
-        registry.counter("vedtak_arkivert")
+        registry.counter("vedtak_arkivert").increment()
         return 1
     }
 }
