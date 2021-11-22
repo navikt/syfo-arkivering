@@ -45,7 +45,7 @@ class AivenKafkaConfig(
         kafkaErrorHandler: KafkaErrorHandler
     ): ConcurrentKafkaListenerContainerFactory<String, String> {
         val config = mapOf(
-            ConsumerConfig.GROUP_ID_CONFIG to "spinnsyn-backend-consumer",
+            ConsumerConfig.GROUP_ID_CONFIG to "spinnsyn-arkivering-consumer",
             ConsumerConfig.AUTO_OFFSET_RESET_CONFIG to kafkaAutoOffsetReset,
             ConsumerConfig.ENABLE_AUTO_COMMIT_CONFIG to false,
             ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG to StringDeserializer::class.java,
