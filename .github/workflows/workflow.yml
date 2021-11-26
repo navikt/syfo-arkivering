@@ -60,6 +60,7 @@ jobs:
     name: Deploy til dev-gcp (Q1)
     runs-on: ubuntu-latest
     needs: build-and-publish
+    concurrency: deploy-to-dev-gcp
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
@@ -83,6 +84,7 @@ jobs:
     name: Deploy til prod-gcp (Produksjon)
     runs-on: ubuntu-latest
     needs: build-and-publish
+    concurrency: deploy-to-prod-gcp
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
