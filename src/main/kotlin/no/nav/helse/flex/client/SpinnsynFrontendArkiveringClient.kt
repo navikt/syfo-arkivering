@@ -9,6 +9,7 @@ import org.springframework.http.HttpStatus.OK
 import org.springframework.stereotype.Component
 import org.springframework.web.client.RestTemplate
 import org.springframework.web.util.UriComponentsBuilder
+import java.time.LocalDate
 
 @Component
 class SpinnsynFrontendArkiveringClient(
@@ -39,16 +40,28 @@ class SpinnsynFrontendArkiveringClient(
             throw RuntimeException(message)
         }
 
-        val versjon = result.headers["x-nais-app-image"]?.first() ?: "UKJENT"
-        result.body?.let { return HtmlVedtak(html = it, versjon = versjon) }
+        val versjon =
+            result.headers["x-nais-app-image"]?.first() ?: throw RuntimeException("Påkrevd header x-nais-app-image")
+        val fom = result.headers["x-vedtak-fom"]?.first() ?: throw RuntimeException("Påkrevd header x-vedtak-fom")
+        val tom = result.headers["x-vedtak-tom"]?.first() ?: throw RuntimeException("Påkrevd header x-vedtak-tom")
+        result.body?.let {
+            return HtmlVedtak(
+                html = it,
+                versjon = versjon,
+                fom = LocalDate.parse(fom),
+                tom = LocalDate.parse(tom)
+            )
+        }
 
         val message = "Kall mot spinnsyn-frontend-arkivering returnerer ikke data"
         log.error(message)
         throw RuntimeException(message)
     }
 
-    class HtmlVedtak(
+    data class HtmlVedtak(
         val html: String,
         val versjon: String,
+        val fom: LocalDate,
+        val tom: LocalDate,
     )
 }

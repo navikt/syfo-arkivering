@@ -10,9 +10,9 @@ import no.nav.helse.flex.kafka.VedtakStatus
 
 fun skapJournalpostRequest(
     vedtakStatus: VedtakStatus,
-    pdf: ByteArray
+    pdf: ByteArray,
+    tittel: String
 ): JournalpostRequest {
-    val tittel = "Svar på søknad om sykepenger"
     return JournalpostRequest(
         bruker = Bruker(
             id = vedtakStatus.fnr,

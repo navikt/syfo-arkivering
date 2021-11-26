@@ -11,6 +11,8 @@ import no.nav.helse.flex.pdfgenerering.PdfGenerering.createPDFA
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Component
 import java.time.Instant
+import java.time.LocalDate
+import java.time.format.DateTimeFormatter
 
 @Component
 class Arkivaren(
@@ -23,16 +25,32 @@ class Arkivaren(
     @Value("\${nais.app.image}")
     val naisAppImage: String
 ) {
-    fun hentSomHtmlOgInlineTing(fnr: String, utbetalingId: String): Pair<String, String> {
-        val html = spinnsynFrontendArkiveringClient.hentVedtakSomHtml(utbetalingId = utbetalingId, fnr = fnr)
-        return Pair(htmlInliner.inlineHtml(html.html), html.versjon)
+
+    val norskDato: DateTimeFormatter = DateTimeFormatter.ofPattern("dd.MM.yyyy")
+
+    fun hentSomHtmlOgInlineTing(fnr: String, utbetalingId: String): SpinnsynFrontendArkiveringClient.HtmlVedtak {
+        val htmlVedtak = spinnsynFrontendArkiveringClient.hentVedtakSomHtml(utbetalingId = utbetalingId, fnr = fnr)
+        return htmlVedtak.copy(html = htmlInliner.inlineHtml(htmlVedtak.html))
     }
 
-    fun hentPdf(fnr: String, utbetalingId: String): Pair<ByteArray, String> {
+    data class PdfVedtak(
+        val pdf: ByteArray,
+        val versjon: String,
+        val fom: LocalDate,
+        val tom: LocalDate,
+    )
+
+    fun hentPdf(fnr: String, utbetalingId: String): PdfVedtak {
 
         val html = hentSomHtmlOgInlineTing(fnr, utbetalingId)
 
-        return Pair(hentPdfFraHtml(html.first), html.second)
+        val pdf = hentPdfFraHtml(html.html)
+        return PdfVedtak(
+            pdf = pdf,
+            versjon = html.versjon,
+            fom = html.fom,
+            tom = html.tom
+        )
     }
 
     fun hentPdfFraHtml(html: String): ByteArray {
@@ -52,14 +70,15 @@ class Arkivaren(
             return 0
         }
 
-        val hentPdf = hentPdf(fnr = vedtak.fnr, utbetalingId = vedtak.id)
+        val vedtaket = hentPdf(fnr = vedtak.fnr, utbetalingId = vedtak.id)
 
         if (environmentToggles.isProduction()) {
             log.info("Arkiverer ikke vedtak ${vedtak.id} fordi vi ikke har skrudd dette på i produksjon ennå")
             return 0
         }
 
-        val request = skapJournalpostRequest(vedtak, hentPdf.first)
+        val tittel = "Svar på søknad om sykepenger for periode: ${vedtaket.fom.format(norskDato)} til ${vedtaket.tom.format(norskDato)}"
+        val request = skapJournalpostRequest(vedtak, vedtaket.pdf, tittel)
         val journalpostResponse = dokArkivClient.opprettJournalpost(request, vedtak.id)
 
         if (!journalpostResponse.journalpostferdigstilt) {
@@ -74,7 +93,7 @@ class Arkivaren(
                 journalpostId = journalpostResponse.journalpostId,
                 opprettet = Instant.now(),
                 spinnsynArkiveringImage = naisAppImage,
-                spinnsynFrontendImage = hentPdf.second
+                spinnsynFrontendImage = vedtaket.versjon
             )
         )
         log.info("Arkiverte vedtak ${vedtak.id}")

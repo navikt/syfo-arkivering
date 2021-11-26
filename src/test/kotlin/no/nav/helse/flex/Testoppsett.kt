@@ -65,17 +65,23 @@ abstract class Testoppsett {
     }
 
     fun enqueFiler() {
-        enqueFil("/testside.html", "docker.github/spinnsyn-frontend-v2.0")
+        enqueFil("/testside.html", imageName = "docker.github/spinnsyn-frontend-v2.0", fom = "2020-03-12", tom = "2020-04-30")
         enqueFil("/stylesheet.css")
         enqueFil("/ikon-skriv-til-oss.svg")
     }
 
-    fun enqueFil(fil: String, imageName: String? = null) {
+    fun enqueFil(fil: String, imageName: String? = null, fom: String? = null, tom: String? = null) {
         val innhold = HentingOgPdfGenereringTest::class.java.getResource(fil).readText()
 
         val response = MockResponse().setBody(innhold)
         imageName?.let {
             response.setHeader("x-nais-app-image", it)
+        }
+        tom?.let {
+            response.setHeader("x-vedtak-tom", it)
+        }
+        fom?.let {
+            response.setHeader("x-vedtak-fom", it)
         }
 
         spinnsynArkiveringFrontendMockWebServer.enqueue(response)

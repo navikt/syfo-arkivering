@@ -30,8 +30,8 @@ class TestController(
     fun hentHtml(@PathVariable fnr: String, @PathVariable utbetalingId: String, response: HttpServletResponse): String {
         dobbeltsjekkProd()
         val hentSomHtmlOgInlineTing = arkivaren.hentSomHtmlOgInlineTing(fnr = fnr, utbetalingId = utbetalingId)
-        response.setHeader("x-nais-app-image", hentSomHtmlOgInlineTing.second)
-        return hentSomHtmlOgInlineTing.first
+        response.setHeader("x-nais-app-image", hentSomHtmlOgInlineTing.versjon)
+        return hentSomHtmlOgInlineTing.html
     }
 
     @ResponseBody
@@ -43,8 +43,8 @@ class TestController(
     ): ByteArray {
         dobbeltsjekkProd()
         val hentPdf = arkivaren.hentPdf(fnr = fnr, utbetalingId = utbetalingId)
-        response.setHeader("x-nais-app-image", hentPdf.second)
+        response.setHeader("x-nais-app-image", hentPdf.versjon)
 
-        return hentPdf.first
+        return hentPdf.pdf
     }
 }
