@@ -6,6 +6,7 @@ import org.springframework.http.HttpEntity
 import org.springframework.http.HttpHeaders
 import org.springframework.http.HttpMethod
 import org.springframework.http.HttpStatus.OK
+import org.springframework.retry.annotation.Retryable
 import org.springframework.stereotype.Component
 import org.springframework.web.client.RestTemplate
 import org.springframework.web.util.UriComponentsBuilder
@@ -19,6 +20,7 @@ class SpinnsynFrontendArkiveringClient(
 
     val log = logger()
 
+    @Retryable
     fun hentVedtakSomHtml(utbetalingId: String, fnr: String): HtmlVedtak {
 
         val uriBuilder = UriComponentsBuilder.fromHttpUrl("$url/syk/sykepenger/vedtak/arkivering/$utbetalingId")
@@ -36,7 +38,7 @@ class SpinnsynFrontendArkiveringClient(
 
         if (result.statusCode != OK) {
             val message = """Kall mot spinnsyn-frontend-arkivering feiler med HTTP-${result.statusCode}"""
-            log.error(message)
+            log.warn(message)
             throw RuntimeException(message)
         }
 
