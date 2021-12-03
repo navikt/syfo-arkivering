@@ -3,7 +3,6 @@ package no.nav.helse.flex.arkivering
 import io.micrometer.core.instrument.MeterRegistry
 import no.nav.helse.flex.client.DokArkivClient
 import no.nav.helse.flex.client.SpinnsynFrontendArkiveringClient
-import no.nav.helse.flex.config.EnvironmentToggles
 import no.nav.helse.flex.html.HtmlInliner
 import no.nav.helse.flex.kafka.VedtakStatus
 import no.nav.helse.flex.logger
@@ -19,7 +18,6 @@ class Arkivaren(
     val spinnsynFrontendArkiveringClient: SpinnsynFrontendArkiveringClient,
     val htmlInliner: HtmlInliner,
     val dokArkivClient: DokArkivClient,
-    val environmentToggles: EnvironmentToggles,
     val arkivertVedtakRepository: ArkivertVedtakRepository,
     val registry: MeterRegistry,
     @Value("\${nais.app.image}")
@@ -71,11 +69,6 @@ class Arkivaren(
         }
 
         val vedtaket = hentPdf(fnr = vedtak.fnr, utbetalingId = vedtak.id)
-
-        if (environmentToggles.isProduction()) {
-            log.info("Arkiverer ikke vedtak ${vedtak.id} fordi vi ikke har skrudd dette på i produksjon ennå")
-            return 0
-        }
 
         val tittel = "Svar på søknad om sykepenger for periode: ${vedtaket.fom.format(norskDato)} til ${vedtaket.tom.format(norskDato)}"
         val request = skapJournalpostRequest(vedtak, vedtaket.pdf, tittel)
