@@ -5,6 +5,7 @@ import no.nav.helse.flex.client.domain.JournalpostRequest
 import no.nav.helse.flex.client.domain.JournalpostResponse
 import no.nav.helse.flex.kafka.FLEX_VEDTAK_STATUS_TOPIC
 import no.nav.helse.flex.kafka.VedtakStatus
+import no.nav.helse.flex.kafka.VedtakStatusDto
 import okhttp3.mockwebserver.MockResponse
 import org.amshove.kluent.`should be equal to`
 import org.amshove.kluent.shouldStartWith
@@ -50,7 +51,7 @@ class IntegrasjonTest : Testoppsett() {
                 FLEX_VEDTAK_STATUS_TOPIC,
                 null,
                 fnr,
-                VedtakStatus(id = vedtakId, fnr = fnr).serialisertTilString()
+                VedtakStatusDto(id = vedtakId, fnr = fnr, vedtakStatus = VedtakStatus.MOTATT).serialisertTilString()
             )
         ).get()
 
@@ -86,7 +87,7 @@ class IntegrasjonTest : Testoppsett() {
                 FLEX_VEDTAK_STATUS_TOPIC,
                 null,
                 fnr,
-                VedtakStatus(id = vedtakId, fnr = fnr).serialisertTilString()
+                VedtakStatusDto(id = vedtakId, fnr = fnr, vedtakStatus = VedtakStatus.MOTATT).serialisertTilString()
             )
         ).get()
 

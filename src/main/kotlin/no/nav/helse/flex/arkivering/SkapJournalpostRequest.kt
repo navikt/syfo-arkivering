@@ -6,16 +6,16 @@ import no.nav.helse.flex.client.domain.Dokument
 import no.nav.helse.flex.client.domain.Dokumentvarianter
 import no.nav.helse.flex.client.domain.JournalpostRequest
 import no.nav.helse.flex.client.domain.Sak
-import no.nav.helse.flex.kafka.VedtakStatus
+import no.nav.helse.flex.kafka.VedtakStatusDto
 
 fun skapJournalpostRequest(
-    vedtakStatus: VedtakStatus,
+    vedtakStatusDto: VedtakStatusDto,
     pdf: ByteArray,
     tittel: String
 ): JournalpostRequest {
     return JournalpostRequest(
         bruker = Bruker(
-            id = vedtakStatus.fnr,
+            id = vedtakStatusDto.fnr,
             idType = "FNR"
         ),
         dokumenter = listOf(
@@ -36,11 +36,11 @@ fun skapJournalpostRequest(
         ),
         journalpostType = "UTGAAENDE",
         journalfoerendeEnhet = "9999",
-        eksternReferanseId = vedtakStatus.id,
+        eksternReferanseId = vedtakStatusDto.id,
         tema = "SYK",
         tittel = tittel,
         avsenderMottaker = AvsenderMottaker(
-            id = vedtakStatus.fnr,
+            id = vedtakStatusDto.fnr,
             idType = "FNR",
         )
     )

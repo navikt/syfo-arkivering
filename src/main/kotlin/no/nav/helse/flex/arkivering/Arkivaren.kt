@@ -5,6 +5,7 @@ import no.nav.helse.flex.client.DokArkivClient
 import no.nav.helse.flex.client.SpinnsynFrontendArkiveringClient
 import no.nav.helse.flex.html.HtmlInliner
 import no.nav.helse.flex.kafka.VedtakStatus
+import no.nav.helse.flex.kafka.VedtakStatusDto
 import no.nav.helse.flex.logger
 import no.nav.helse.flex.pdfgenerering.PdfGenerering.createPDFA
 import org.springframework.beans.factory.annotation.Value
@@ -60,8 +61,12 @@ class Arkivaren(
         return createPDFA(html.replaceFirst("<!DOCTYPE html>", nyDoctype))
     }
 
-    fun arkiverVedtak(vedtak: VedtakStatus): Int {
+    fun arkiverVedtak(vedtak: VedtakStatusDto): Int {
         val log = logger()
+
+        if (vedtak.vedtakStatus != VedtakStatus.MOTATT) {
+            return 0
+        }
 
         if (arkivertVedtakRepository.existsByVedtakId(vedtak.id)) {
             log.warn("Vedtak ${vedtak.id} er allerede arkivert")
