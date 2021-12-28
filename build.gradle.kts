@@ -1,16 +1,16 @@
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
-    id("org.springframework.boot") version "2.5.6"
+    id("org.springframework.boot") version "2.6.2"
     id("io.spring.dependency-management") version "1.0.11.RELEASE"
-    kotlin("jvm") version "1.5.31"
-    kotlin("plugin.spring") version "1.5.31"
+    kotlin("jvm") version "1.6.10"
+    kotlin("plugin.spring") version "1.6.10"
 }
 
 group = "no.nav.helse.flex"
 version = "1.0.0"
 description = "spinnsyn-arkivering"
-java.sourceCompatibility = JavaVersion.VERSION_16
+java.sourceCompatibility = JavaVersion.VERSION_17
 
 buildscript {
     repositories {
@@ -83,7 +83,7 @@ tasks.getByName<org.springframework.boot.gradle.tasks.bundling.BootJar>("bootJar
 tasks.withType<KotlinCompile> {
     kotlinOptions {
         freeCompilerArgs = listOf("-Xjsr305=strict")
-        jvmTarget = "16"
+        jvmTarget = "17"
         if (System.getenv("CI") == "true") {
             kotlinOptions.allWarningsAsErrors = true
         }
