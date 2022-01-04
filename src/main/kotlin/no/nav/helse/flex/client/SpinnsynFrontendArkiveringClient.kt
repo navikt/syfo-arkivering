@@ -1,6 +1,5 @@
 package no.nav.helse.flex.client
 
-import no.nav.helse.flex.logger
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.http.HttpEntity
 import org.springframework.http.HttpHeaders
@@ -8,6 +7,7 @@ import org.springframework.http.HttpMethod
 import org.springframework.http.HttpStatus.OK
 import org.springframework.retry.annotation.Retryable
 import org.springframework.stereotype.Component
+import org.springframework.web.client.HttpClientErrorException
 import org.springframework.web.client.RestTemplate
 import org.springframework.web.util.UriComponentsBuilder
 import java.time.LocalDate
@@ -18,16 +18,23 @@ class SpinnsynFrontendArkiveringClient(
     @Value("\${spinnsyn.frontend.arkivering.url}") private val url: String
 ) {
 
-    val log = logger()
+    @Retryable(exclude = [VedtakIkkeFunnetException::class])
+    fun hentVedtakSomHtml(fnr: String, id: String): HtmlVedtak {
+        try {
+            return hentVedtak(fnr = fnr, id = id)
+        } catch (e: HttpClientErrorException.NotFound) {
+            // Forhindrer retry når vi vet at vedtaket ikke finnes.
+            throw VedtakIkkeFunnetException("Vedtak med id: $id ble ikke returnert fra spinnsyn-frontend (404 Not Found)")
+        }
+    }
 
-    @Retryable
-    fun hentVedtakSomHtml(utbetalingId: String, fnr: String): HtmlVedtak {
-
-        val uriBuilder = UriComponentsBuilder.fromHttpUrl("$url/syk/sykepenger/vedtak/arkivering/$utbetalingId")
+    private fun hentVedtak(fnr: String, id: String): HtmlVedtak {
+        val uriBuilder = UriComponentsBuilder.fromHttpUrl("$url/syk/sykepenger/vedtak/arkivering/$id")
 
         val headers = HttpHeaders()
         headers["fnr"] = fnr
 
+        // Kaster RestTemplateException for alle 4xx og 5xx HTTP statuskoder.
         val result = spinnsynFrontendArkiveringRestTemplate
             .exchange(
                 uriBuilder.toUriString(),
@@ -36,16 +43,16 @@ class SpinnsynFrontendArkiveringClient(
                 String::class.java
             )
 
+        // TODO: Kommer ikke hit for annet enn 2xx og 3xx statuskoder. Bruke RestTemplateErrorHandler til å rydde med?
         if (result.statusCode != OK) {
-            val message = """Kall mot spinnsyn-frontend-arkivering feiler med HTTP-${result.statusCode}"""
-            log.warn(message)
-            throw RuntimeException(message)
+            throw RuntimeException("Kall mot spinnsyn-frontend-arkivering feiler med HTTP-${result.statusCode}")
         }
 
         val versjon =
             result.headers["x-nais-app-image"]?.first() ?: throw RuntimeException("Påkrevd header x-nais-app-image")
         val fom = result.headers["x-vedtak-fom"]?.first() ?: throw RuntimeException("Påkrevd header x-vedtak-fom")
         val tom = result.headers["x-vedtak-tom"]?.first() ?: throw RuntimeException("Påkrevd header x-vedtak-tom")
+
         result.body?.let {
             return HtmlVedtak(
                 html = it,
@@ -55,9 +62,7 @@ class SpinnsynFrontendArkiveringClient(
             )
         }
 
-        val message = "Kall mot spinnsyn-frontend-arkivering returnerer ikke data"
-        log.error(message)
-        throw RuntimeException(message)
+        throw RuntimeException("Kall mot spinnsyn-frontend-arkivering returnerer ikke data")
     }
 
     data class HtmlVedtak(
@@ -67,3 +72,7 @@ class SpinnsynFrontendArkiveringClient(
         val tom: LocalDate,
     )
 }
+
+class VedtakIkkeFunnetException(message: String) : RuntimeException(
+    message
+)

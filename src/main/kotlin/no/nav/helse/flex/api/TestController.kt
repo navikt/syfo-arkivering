@@ -29,7 +29,7 @@ class TestController(
     @GetMapping(value = ["/api/test/html/{fnr}/{utbetalingId}"], produces = [MediaType.TEXT_HTML_VALUE])
     fun hentHtml(@PathVariable fnr: String, @PathVariable utbetalingId: String, response: HttpServletResponse): String {
         dobbeltsjekkProd()
-        val hentSomHtmlOgInlineTing = arkivaren.hentSomHtmlOgInlineTing(fnr = fnr, utbetalingId = utbetalingId)
+        val hentSomHtmlOgInlineTing = arkivaren.hentSomHtmlOgInlineTing(fnr = fnr, id = utbetalingId)
         response.setHeader("x-nais-app-image", hentSomHtmlOgInlineTing.versjon)
         return hentSomHtmlOgInlineTing.html
     }
@@ -42,7 +42,7 @@ class TestController(
         response: HttpServletResponse
     ): ByteArray {
         dobbeltsjekkProd()
-        val hentPdf = arkivaren.hentPdf(fnr = fnr, utbetalingId = utbetalingId)
+        val hentPdf = arkivaren.hentPdf(fnr = fnr, id = utbetalingId)
         response.setHeader("x-nais-app-image", hentPdf.versjon)
 
         return hentPdf.pdf

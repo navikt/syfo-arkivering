@@ -3,8 +3,9 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 plugins {
     id("org.springframework.boot") version "2.6.2"
     id("io.spring.dependency-management") version "1.0.11.RELEASE"
-    kotlin("jvm") version "1.6.10"
+    id("org.jlleitschuh.gradle.ktlint") version "10.2.1"
     kotlin("plugin.spring") version "1.6.10"
+    kotlin("jvm") version "1.6.10"
 }
 
 group = "no.nav.helse.flex"
@@ -16,14 +17,9 @@ buildscript {
     repositories {
         maven("https://plugins.gradle.org/m2/")
     }
-    dependencies {
-        classpath("org.jlleitschuh.gradle:ktlint-gradle:10.2.1")
-    }
 }
 
-ext["okhttp3.version"] = "4.9.0" // For at token support testen kjører
-
-apply(plugin = "org.jlleitschuh.gradle.ktlint")
+ext["okhttp3.version"] = "4.9.0" // For at tester som bruker MockWebServer skal fungere.
 
 repositories {
     mavenCentral()

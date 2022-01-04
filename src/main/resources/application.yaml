@@ -35,9 +35,8 @@ no.nav.security.jwt:
           client-secret: ${AZURE_APP_CLIENT_SECRET}
           client-auth-method: client_secret_basic
 
-
 aiven-kafka:
-  auto-offset-reset: latest #TODO NONE
+  auto-offset-reset: none
   security-protocol: SSL
 
 management:

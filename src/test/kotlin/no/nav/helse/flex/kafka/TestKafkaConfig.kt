@@ -1,10 +1,14 @@
 package no.nav.helse.flex.kafka
 
+import org.apache.kafka.clients.consumer.ConsumerConfig
+import org.apache.kafka.clients.consumer.KafkaConsumer
 import org.apache.kafka.clients.producer.KafkaProducer
 import org.apache.kafka.clients.producer.ProducerConfig
+import org.apache.kafka.common.serialization.StringDeserializer
 import org.apache.kafka.common.serialization.StringSerializer
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
+
 @Configuration
 class TestKafkaConfig(
     private val aivenKafkaConfig: AivenKafkaConfig,
@@ -21,4 +25,15 @@ class TestKafkaConfig(
         ) + aivenKafkaConfig.commonConfig()
         return KafkaProducer(config)
     }
+
+    @Bean
+    fun kafkaConsumer() = KafkaConsumer<String, String>(
+        mapOf(
+            ConsumerConfig.GROUP_ID_CONFIG to "spinnsyn-arkivering-consumer",
+            ConsumerConfig.ENABLE_AUTO_COMMIT_CONFIG to false,
+            ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG to StringDeserializer::class.java,
+            ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG to StringDeserializer::class.java,
+            ConsumerConfig.AUTO_OFFSET_RESET_CONFIG to "earliest",
+        ) + aivenKafkaConfig.commonConfig()
+    )
 }
