@@ -58,6 +58,7 @@ class AivenKafkaConfig(
         factory.consumerFactory = consumerFactory
         factory.setCommonErrorHandler(kafkaErrorHandler)
         factory.containerProperties.ackMode = ContainerProperties.AckMode.MANUAL_IMMEDIATE
+        factory.setConcurrency(3)
         return factory
     }
 }
