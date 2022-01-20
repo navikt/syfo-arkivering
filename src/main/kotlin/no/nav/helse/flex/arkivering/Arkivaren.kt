@@ -4,7 +4,6 @@ import io.micrometer.core.instrument.MeterRegistry
 import no.nav.helse.flex.client.DokArkivClient
 import no.nav.helse.flex.client.SpinnsynFrontendArkiveringClient
 import no.nav.helse.flex.html.HtmlInliner
-import no.nav.helse.flex.kafka.VedtakArkiveringDTO
 import no.nav.helse.flex.kafka.VedtakStatus
 import no.nav.helse.flex.kafka.VedtakStatusDto
 import no.nav.helse.flex.logger
@@ -30,17 +29,23 @@ class Arkivaren(
 
     val norskDato: DateTimeFormatter = DateTimeFormatter.ofPattern("dd.MM.yyyy")
 
-    fun hentSomHtmlOgInlineTing(fnr: String, id: String): SpinnsynFrontendArkiveringClient.HtmlVedtak {
-        val htmlVedtak = spinnsynFrontendArkiveringClient.hentVedtakSomHtml(fnr = fnr, id = id)
-        return htmlVedtak.copy(html = htmlInliner.inlineHtml(htmlVedtak.html))
-    }
-
     data class PdfVedtak(
         val pdf: ByteArray,
         val versjon: String,
         val fom: LocalDate,
         val tom: LocalDate,
     )
+
+    fun arkiverVedtak(vedtak: VedtakStatusDto): Int {
+        if (vedtak.vedtakStatus != VedtakStatus.MOTATT) {
+            return 0
+        }
+        if (arkivertVedtakRepository.existsByVedtakId(vedtak.id)) {
+            log.warn("Vedtak med $vedtak.id er allerede arkivert")
+            return 0
+        }
+        return lagreJournalpost(fnr = vedtak.fnr, id = vedtak.id)
+    }
 
     fun hentPdf(fnr: String, id: String): PdfVedtak {
         val html = hentSomHtmlOgInlineTing(fnr = fnr, id = id)
@@ -54,6 +59,11 @@ class Arkivaren(
         )
     }
 
+    fun hentSomHtmlOgInlineTing(fnr: String, id: String): SpinnsynFrontendArkiveringClient.HtmlVedtak {
+        val htmlVedtak = spinnsynFrontendArkiveringClient.hentVedtakSomHtml(fnr = fnr, id = id)
+        return htmlVedtak.copy(html = htmlInliner.inlineHtml(htmlVedtak.html))
+    }
+
     fun hentPdfFraHtml(html: String): ByteArray {
         val nyDoctype = """
             <!DOCTYPE html PUBLIC
@@ -63,29 +73,7 @@ class Arkivaren(
         return createPDFA(html.replaceFirst("<!DOCTYPE html>", nyDoctype))
     }
 
-    fun arkiverUarkivertVedtak(vedtak: VedtakArkiveringDTO): Int {
-        // Sikrer at Kafka-melding blir ack'et uansett feil.
-        return try {
-            lagreJournalpost(fnr = vedtak.fnr, id = vedtak.id)
-        } catch (e: RuntimeException) {
-            log.warn("Feil ved arkivering av uarkivert vedtak: ${e.message}")
-            0
-        }
-    }
-
-    fun arkiverVedtak(vedtak: VedtakStatusDto): Int {
-        if (vedtak.vedtakStatus != VedtakStatus.MOTATT) {
-            return 0
-        }
-        return lagreJournalpost(fnr = vedtak.fnr, id = vedtak.id)
-    }
-
     private fun lagreJournalpost(fnr: String, id: String): Int {
-        if (arkivertVedtakRepository.existsByVedtakId(id)) {
-            log.warn("Vedtak med $id er allerede arkivert")
-            return 0
-        }
-
         val vedtaket = hentPdf(fnr = fnr, id = id)
 
         val tittel = "Svar på søknad om sykepenger for periode: ${vedtaket.fom.format(norskDato)} " +
