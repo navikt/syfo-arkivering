@@ -16,12 +16,6 @@ class ArkiveringListener(
 
     private val log = logger()
 
-    @KafkaListener(
-        topics = [FLEX_VEDTAK_ARKIVERING_TOPIC],
-        containerFactory = "aivenKafkaListenerContainerFactory",
-        properties = ["auto.offset.reset = earliest"],
-        groupId = "spinnsyn-arkivering-ferdigstilling"
-    )
     fun listen(cr: ConsumerRecord<String, String>, acknowledgment: Acknowledgment) {
         val arkivertVedtakDto = cr.value().tilArkivertVedtakDto()
         log.info(
