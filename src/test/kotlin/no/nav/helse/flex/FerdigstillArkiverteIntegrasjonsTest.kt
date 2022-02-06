@@ -15,6 +15,7 @@ import org.apache.kafka.clients.consumer.Consumer
 import org.apache.kafka.clients.producer.KafkaProducer
 import org.apache.kafka.clients.producer.ProducerRecord
 import org.junit.jupiter.api.BeforeAll
+import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource
 import java.nio.charset.Charset
@@ -38,6 +39,7 @@ class FerdigstillArkiverteIntegrasjonsTest() : Testoppsett() {
         uarkiverteKafkaConsumer.hentRecords().shouldBeEmpty()
     }
 
+    @Test
     fun `Arkivert vedtak blir ferdigstilt`() {
         val vedtakId = "88804146-28ee-30d9-b0a3-a904919c7a37"
         val fnr = "fnr-1"
