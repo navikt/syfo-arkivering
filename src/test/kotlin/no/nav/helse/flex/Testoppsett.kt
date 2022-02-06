@@ -11,6 +11,8 @@ import org.junit.jupiter.api.AfterAll
 import org.junit.jupiter.api.TestInstance
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
+import org.springframework.jdbc.core.JdbcTemplate
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate
 import org.testcontainers.containers.KafkaContainer
 import org.testcontainers.containers.PostgreSQLContainer
 import org.testcontainers.utility.DockerImageName
@@ -26,8 +28,15 @@ abstract class Testoppsett {
     @Autowired
     lateinit var arkivertVedtakRepository: ArkivertVedtakRepository
 
+    @Autowired
+    lateinit var jdbcTemplate: JdbcTemplate
+
+    @Autowired
+    lateinit var namedParameterJdbcTemplate: NamedParameterJdbcTemplate
+
     companion object {
         var spinnsynArkiveringFrontendMockWebServer: MockWebServer
+        var spinnsynBackendMockWebServer: MockWebServer
         var dokarkivMockWebServer: MockWebServer
 
         init {
@@ -49,6 +58,12 @@ abstract class Testoppsett {
                 .also { it.start() }
                 .also {
                     System.setProperty("spinnsyn.frontend.arkivering.url", "http://localhost:${it.port}")
+                }
+
+            spinnsynBackendMockWebServer = MockWebServer()
+                .also { it.start() }
+                .also {
+                    System.setProperty("spinnsyn.backend.url", "http://localhost:${it.port}")
                 }
 
             dokarkivMockWebServer = MockWebServer()
