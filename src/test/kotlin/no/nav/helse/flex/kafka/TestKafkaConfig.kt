@@ -29,7 +29,7 @@ class TestKafkaConfig(
     @Bean
     fun kafkaConsumer() = KafkaConsumer<String, String>(
         mapOf(
-            ConsumerConfig.GROUP_ID_CONFIG to "spinnsyn-arkivering-consumer",
+            ConsumerConfig.GROUP_ID_CONFIG to "spinnsyn-arkivering-ferdigstilling",
             ConsumerConfig.ENABLE_AUTO_COMMIT_CONFIG to false,
             ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG to StringDeserializer::class.java,
             ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG to StringDeserializer::class.java,

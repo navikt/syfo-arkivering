@@ -7,6 +7,7 @@ import no.nav.helse.flex.kafka.ArkivertVedtakDto
 import no.nav.helse.flex.logger
 import org.springframework.dao.DataAccessException
 import org.springframework.stereotype.Service
+import org.springframework.web.client.RestClientException
 import java.time.Instant
 
 @Service
@@ -31,17 +32,12 @@ class FerdigstillArkiverteService(
     private fun ferdigstillArkivertVedtak(journalpostId: String, vedtakDto: ArkivertVedtakDto) {
         val datoJournal = hentOpprettetDato(vedtakDto.fnr, vedtakDto.id)
 
-        val journalpostRequest = FerdigstillJournalpostRequest(
-            journalfoerendeEnhet = "9999",
-            datoJournal = datoJournal
-        )
-        dokArkivClient.ferdigstillJournalpost(
-            journalpostId = journalpostId,
-            journalpostRequest = journalpostRequest,
-            vedtakId = vedtakDto.id
-        )
-
-        log.info("Ferdigstilt vedtak med id: ${vedtakDto.id}, journalpostId: $journalpostId og datoJournal: $datoJournal.")
+        try {
+            sendFerdigstillRequest(journalpostId, datoJournal, vedtakDto.id)
+            log.info("Ferdigstilt vedtak med id: ${vedtakDto.id}, journalpostId: $journalpostId og datoJournal: $datoJournal.")
+        } catch (e: RestClientException) {
+            log.error("Feil ved kall til Dokarkiv for journalpostId: $journalpostId og vedtakId: ${vedtakDto.id}.", e)
+        }
     }
 
     private fun hentJournalPostId(id: String): String? {
@@ -54,5 +50,22 @@ class FerdigstillArkiverteService(
 
     private fun hentOpprettetDato(fnr: String, id: String): Instant {
         return spinnsynClient.hentVedtak(fnr).first { vedtak -> vedtak.id == id }.opprettetTimestamp
+    }
+
+    private fun sendFerdigstillRequest(
+        journalpostId: String,
+        datoJournal: Instant,
+        vedtakId: String,
+    ) {
+        val journalpostRequest = FerdigstillJournalpostRequest(
+            journalfoerendeEnhet = "9999",
+            datoJournal = datoJournal
+        )
+
+        dokArkivClient.ferdigstillJournalpost(
+            journalpostId = journalpostId,
+            journalpostRequest = journalpostRequest,
+            vedtakId = vedtakId
+        )
     }
 }

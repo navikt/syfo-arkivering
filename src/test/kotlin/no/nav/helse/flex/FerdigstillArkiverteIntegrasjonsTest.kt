@@ -1,6 +1,7 @@
 package no.nav.helse.flex
 
 import com.fasterxml.jackson.module.kotlin.readValue
+import io.micrometer.core.instrument.MeterRegistry
 import no.nav.helse.flex.client.FerdigstillJournalpostRequest
 import no.nav.helse.flex.kafka.ArkivertVedtakDto
 import no.nav.helse.flex.kafka.FLEX_VEDTAK_ARKIVERING_TOPIC
@@ -14,8 +15,12 @@ import org.amshove.kluent.shouldStartWith
 import org.apache.kafka.clients.consumer.Consumer
 import org.apache.kafka.clients.producer.KafkaProducer
 import org.apache.kafka.clients.producer.ProducerRecord
+import org.awaitility.Awaitility.await
 import org.junit.jupiter.api.BeforeAll
+import org.junit.jupiter.api.MethodOrderer
+import org.junit.jupiter.api.Order
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.TestMethodOrder
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource
 import java.nio.charset.Charset
@@ -24,7 +29,9 @@ import java.time.Instant
 import java.time.LocalDateTime
 import java.time.ZoneOffset
 import java.util.*
+import java.util.concurrent.TimeUnit
 
+@TestMethodOrder(MethodOrderer.OrderAnnotation::class)
 class FerdigstillArkiverteIntegrasjonsTest() : Testoppsett() {
 
     @Autowired
@@ -33,20 +40,27 @@ class FerdigstillArkiverteIntegrasjonsTest() : Testoppsett() {
     @Autowired
     private lateinit var uarkiverteKafkaConsumer: Consumer<String, String>
 
+    @Autowired
+    private lateinit var registry: MeterRegistry
+
+    private val vedtakId = "88804146-28ee-30d9-b0a3-a904919c7a37"
+    private val fnr = "fnr-1"
+    private val journalpostId = "journalpost-1"
+    private val opprettet = LocalDateTime.of(2022, 5, 1, 12, 5, 10).toInstant(ZoneOffset.UTC)
+
     @BeforeAll
     fun subscribeTilTopic() {
         uarkiverteKafkaConsumer.lyttPaaTopic(FLEX_VEDTAK_ARKIVERING_TOPIC)
         uarkiverteKafkaConsumer.hentRecords().shouldBeEmpty()
+
+        opprettArkivertVedtak(vedtakId, fnr, journalpostId)
     }
 
     @Test
+    @Order(1)
     fun `Arkivert vedtak blir ferdigstilt`() {
-        val vedtakId = "88804146-28ee-30d9-b0a3-a904919c7a37"
-        val fnr = "fnr-1"
-        val journalpostId = "journalpost-1"
-        val opprettet = LocalDateTime.of(2022, 5, 1, 12, 5, 10).toInstant(ZoneOffset.UTC)
-
-        opprettArkivertVedtak(vedtakId, fnr, journalpostId)
+        val counter = registry.counter("ferdigstillt.arkivert")
+        val antallFoer = counter.count()
 
         val spinnsynBackendResponse = listOf(RSVedtakWrapper(id = vedtakId, opprettetTimestamp = opprettet))
         val mockResponse = MockResponse().setBody(spinnsynBackendResponse.serialisertTilString())
@@ -80,7 +94,54 @@ class FerdigstillArkiverteIntegrasjonsTest() : Testoppsett() {
         journalpostRequestBody.datoJournal `should be equal to` opprettet
         journalpostRequestBody.journalfoerendeEnhet `should be equal to` "9999"
 
-        dokarkivMockWebServer.requestCount `should be equal to` 1
+        await().atMost(2L, TimeUnit.SECONDS).until {
+            counter.count().equals(antallFoer + 1)
+        }
+    }
+
+    @Test
+    @Order(2)
+    fun `Kall til Dokarkiv feiler`() {
+        val counter = registry.counter("ferdigstillt.arkivert")
+        val antallFoer = counter.count()
+
+        val spinnsynBackendResponse = listOf(RSVedtakWrapper(id = vedtakId, opprettetTimestamp = opprettet))
+        val mockResponse = MockResponse().setBody(spinnsynBackendResponse.serialisertTilString())
+        spinnsynBackendMockWebServer.enqueue(mockResponse)
+
+        // Returnerer 400 Bad Request, som trigger en RestClientException
+        val dokarkivResponse = MockResponse().setResponseCode(400).setBody("Test")
+        dokarkivMockWebServer.enqueue(dokarkivResponse)
+
+        kafkaProducer.send(
+            ProducerRecord(
+                FLEX_VEDTAK_ARKIVERING_TOPIC,
+                null,
+                fnr,
+                ArkivertVedtakDto(fnr = fnr, id = vedtakId).serialisertTilString()
+            )
+        ).get()
+
+        val htmlRequest = spinnsynBackendMockWebServer.takeRequest()
+
+        htmlRequest.path `should be equal to` "/api/v1/arkivering/vedtak"
+        htmlRequest.headers["fnr"] `should be equal to` fnr
+        htmlRequest.headers["Authorization"]!!.shouldStartWith("Bearer ey")
+
+        val dokarkivRequest = dokarkivMockWebServer.takeRequest()
+        dokarkivRequest.path `should be equal to` "/rest/journalpostapi/v1/journalpost/$journalpostId/ferdigstill"
+        dokarkivRequest.headers["Authorization"]!!.shouldStartWith("Bearer ey")
+
+        val journalpostRequestBody: FerdigstillJournalpostRequest =
+            objectMapper.readValue(dokarkivRequest.body.readString(Charset.defaultCharset()))
+
+        journalpostRequestBody.datoJournal `should be equal to` opprettet
+        journalpostRequestBody.journalfoerendeEnhet `should be equal to` "9999"
+
+        // Skal inkrementere selv om kall til Dokarkiv feiler.
+        await().atMost(1L, TimeUnit.SECONDS).until {
+            counter.count().equals(antallFoer + 1)
+        }
     }
 
     private fun opprettArkivertVedtak(vedtakId: String, fnr: String, journalpostId: String) {

@@ -1,6 +1,7 @@
 package no.nav.helse.flex.kafka
 
 import com.fasterxml.jackson.module.kotlin.readValue
+import io.micrometer.core.instrument.MeterRegistry
 import no.nav.helse.flex.logger
 import no.nav.helse.flex.objectMapper
 import no.nav.helse.flex.uarkiverte.FerdigstillArkiverteService
@@ -11,7 +12,8 @@ import org.springframework.stereotype.Component
 
 @Component
 class ArkiveringListener(
-    private val ferdigstillArkiverteService: FerdigstillArkiverteService
+    private val ferdigstillArkiverteService: FerdigstillArkiverteService,
+    private val registry: MeterRegistry
 ) {
 
     private val log = logger()
@@ -29,6 +31,7 @@ class ArkiveringListener(
                 "partisjon: ${cr.partition()} og offset: ${cr.offset()}."
         )
         ferdigstillArkiverteService.ferdigstillVedtak(arkivertVedtakDto)
+        registry.counter("ferdigstillt.arkivert").increment()
         acknowledgment.acknowledge()
     }
 

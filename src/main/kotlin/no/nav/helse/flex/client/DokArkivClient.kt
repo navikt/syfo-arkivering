@@ -40,7 +40,6 @@ class DokArkivClient(
             ?: throw RuntimeException("dokarkiv returnerer ikke data for vedtak med id: $vedtakId")
     }
 
-    @Retryable(backoff = Backoff(delay = 5000))
     fun ferdigstillJournalpost(
         journalpostId: String,
         journalpostRequest: FerdigstillJournalpostRequest,
@@ -52,14 +51,7 @@ class DokArkivClient(
         headers.contentType = MediaType.APPLICATION_JSON
 
         val httpEntity = HttpEntity(journalpostRequest, headers)
-
-        val result = dokarkivRestTemplate.exchange(url, HttpMethod.PATCH, httpEntity, Void::class.java)
-        if (!result.statusCode.is2xxSuccessful) {
-            throw RuntimeException(
-                "Ferdigstilling av journalpost feiler med HTTP-${result.statusCode} ${result.statusCodeValue} for " +
-                    "vedtak med id: $vedtakId og journalpostId: $journalpostId."
-            )
-        }
+        dokarkivRestTemplate.exchange(url, HttpMethod.PATCH, httpEntity, Void::class.java)
     }
 }
 
