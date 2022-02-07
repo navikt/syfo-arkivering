@@ -30,28 +30,16 @@ class DokArkivClient(
 
         val entity = HttpEntity(pdfRequest, headers)
 
+        // Kaster RestTemplateException for alle 4xx og 5xx HTTP statuskoder.
         val result = dokarkivRestTemplate.exchange(url, HttpMethod.POST, entity, JournalpostResponse::class.java)
 
+        // TODO: Kommer ikke hit for annet enn 2xx og 3xx statuskoder så sjekken har ikke så mye verdi.
         if (!result.statusCode.is2xxSuccessful) {
             throw RuntimeException("dokarkiv feiler med HTTP-${result.statusCode} for vedtak med id: $vedtakId")
         }
 
         return result.body
             ?: throw RuntimeException("dokarkiv returnerer ikke data for vedtak med id: $vedtakId")
-    }
-
-    fun ferdigstillJournalpost(
-        journalpostId: String,
-        journalpostRequest: FerdigstillJournalpostRequest,
-        vedtakId: String
-    ) {
-        val url = "$dokarkivUrl/rest/journalpostapi/v1/journalpost/$journalpostId/ferdigstill"
-
-        val headers = HttpHeaders()
-        headers.contentType = MediaType.APPLICATION_JSON
-
-        val httpEntity = HttpEntity(journalpostRequest, headers)
-        dokarkivRestTemplate.exchange(url, HttpMethod.PATCH, httpEntity, Void::class.java)
     }
 }
 

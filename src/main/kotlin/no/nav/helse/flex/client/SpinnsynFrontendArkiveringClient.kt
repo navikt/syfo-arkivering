@@ -43,7 +43,7 @@ class SpinnsynFrontendArkiveringClient(
                 String::class.java
             )
 
-        // TODO: Kommer ikke hit for annet enn 2xx og 3xx statuskoder. Bruke RestTemplateErrorHandler til å rydde med?
+        // TODO: Kommer ikke hit for annet enn 2xx og 3xx statuskoder så sjekken har ikke så mye verdi.
         if (result.statusCode != OK) {
             throw RuntimeException("Kall mot spinnsyn-frontend-arkivering feiler med HTTP-${result.statusCode}")
         }
