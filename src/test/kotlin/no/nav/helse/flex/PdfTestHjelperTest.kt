@@ -1,6 +1,6 @@
 package no.nav.helse.flex
 
-import no.nav.helse.flex.arkivering.Arkivaren
+import no.nav.helse.flex.arkivering.PdfSkaperen
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import java.io.File
@@ -9,7 +9,7 @@ import java.time.OffsetDateTime
 class PdfTestHjelperTest : Testoppsett() {
 
     @Autowired
-    lateinit var arkivaren: Arkivaren
+    lateinit var arkivaren: PdfSkaperen
 
     @Test
     fun pdfHjelper() {

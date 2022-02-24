@@ -45,3 +45,6 @@ no.nav.security.jwt:
 dokarkiv.url: "http://dokarkiv"
 nais.cluster: test
 nais.app.image: docker.github/spinnsyn-arkivering-v2.0
+
+server:
+  port: 8888

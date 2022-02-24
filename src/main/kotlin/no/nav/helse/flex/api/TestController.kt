@@ -1,6 +1,6 @@
 package no.nav.helse.flex.api
 
-import no.nav.helse.flex.arkivering.Arkivaren
+import no.nav.helse.flex.arkivering.PdfSkaperen
 import no.nav.helse.flex.config.EnvironmentToggles
 import no.nav.security.token.support.core.api.Unprotected
 import org.springframework.context.annotation.Profile
@@ -15,7 +15,7 @@ import javax.servlet.http.HttpServletResponse
 @Unprotected
 @Profile("testcontroller")
 class TestController(
-    val arkivaren: Arkivaren,
+    val arkivaren: PdfSkaperen,
     val environmentToggles: EnvironmentToggles
 ) {
 

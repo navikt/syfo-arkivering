@@ -9,6 +9,15 @@ Bygges med gradle som et helt vanlig spring boot prosjekt
 
 ---
 
+# Hvordan teste pdf generering lokalt
+Kompiler `spinnsyn-frontend` med `npm run build`. 
+
+Start frontend med `npm run start-ingen-dekorator`
+
+Start applikasjonen i `src/test/kotlin/no/helse/flex/localtesting/Application.kt` i intellij
+
+Åpne `http://localhost:8888/api/test/pdf/` og du får lastet ned en PDF 
+
 # Henvendelser
 
 Enten:
