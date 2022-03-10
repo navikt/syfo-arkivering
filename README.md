@@ -18,6 +18,13 @@ Start applikasjonen i `src/test/kotlin/no/helse/flex/localtesting/Application.kt
 
 Åpne `http://localhost:8888/api/test/pdf/` og du får lastet ned en PDF 
 
+## Data
+Applikasjonen har en database i GCP.
+
+Tabellen `ARKIVERT_VEDTAK` holder oversikt over vedtak vi har arkivert.
+Tabellen inkluderer fødselsnummer, vedtak_id og journalpost_id og er derfor personidentifiserbar. Det slettes ikke data fra tabellen.
+
+
 # Henvendelser
 
 Enten:
