@@ -13,7 +13,7 @@
     "SPINNSYN_FRONTEND_ARKIVERING_AAD_CLIENT_ID": "dev-gcp.flex.spinnsyn-frontend-arkivering",
     "SPINNSYN_BACKEND_AAD_CLIENT_ID": "dev-gcp.flex.spinnsyn-backend",
     "SPRING_PROFILES_ACTIVE": "default,testcontroller",
-    "DOKARKIV_AAD_CLIENT_ID": "972814f3-8bdf-44f8-a191-c2ed00020b54",
+    "DOKARKIV_AAD_CLIENT_ID": "dev-fss.teamdokumenthandtering.dokarkiv-q1",
     "DOKARKIV_URL": "https://dokarkiv.dev-fss-pub.nais.io"
   }
 },

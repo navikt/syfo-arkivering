@@ -11,7 +11,7 @@
   "env": {
     "SPINNSYN_FRONTEND_ARKIVERING_AAD_CLIENT_ID": "prod-gcp.flex.spinnsyn-frontend-arkivering",
     "SPINNSYN_BACKEND_AAD_CLIENT_ID": "prod-gcp.flex.spinnsyn-backend",
-    "DOKARKIV_AAD_CLIENT_ID": "162b3255-2f72-4399-8f7a-244add9ffaac",
+    "DOKARKIV_AAD_CLIENT_ID": "prod-fss.teamdokumenthandtering.dokarkiv",
     "DOKARKIV_URL": "https://dokarkiv.prod-fss-pub.nais.io"
   }
 }
