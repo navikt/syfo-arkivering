@@ -7,7 +7,6 @@ import org.springframework.http.HttpMethod
 import org.springframework.http.HttpStatus.OK
 import org.springframework.retry.annotation.Retryable
 import org.springframework.stereotype.Component
-import org.springframework.web.client.HttpClientErrorException
 import org.springframework.web.client.RestTemplate
 import org.springframework.web.util.UriComponentsBuilder
 import java.time.LocalDate
@@ -18,14 +17,9 @@ class SpinnsynFrontendArkiveringClient(
     @Value("\${spinnsyn.frontend.arkivering.url}") private val url: String
 ) {
 
-    @Retryable(exclude = [VedtakIkkeFunnetException::class])
+    @Retryable
     fun hentVedtakSomHtml(fnr: String, id: String): HtmlVedtak {
-        try {
-            return hentVedtak(fnr = fnr, id = id)
-        } catch (e: HttpClientErrorException.NotFound) {
-            // Forhindrer retry når vi vet at vedtaket ikke finnes.
-            throw VedtakIkkeFunnetException("Vedtak med id: $id ble ikke returnert fra spinnsyn-frontend (404 Not Found)")
-        }
+        return hentVedtak(fnr = fnr, id = id)
     }
 
     private fun hentVedtak(fnr: String, id: String): HtmlVedtak {
@@ -72,7 +66,3 @@ class SpinnsynFrontendArkiveringClient(
         val tom: LocalDate,
     )
 }
-
-class VedtakIkkeFunnetException(message: String) : RuntimeException(
-    message
-)
