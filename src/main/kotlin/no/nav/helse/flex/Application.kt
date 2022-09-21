@@ -8,7 +8,7 @@ import com.fasterxml.jackson.module.kotlin.registerKotlinModule
 import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.boot.runApplication
 import org.springframework.retry.annotation.EnableRetry
-import org.verapdf.pdfa.VeraGreenfieldFoundryProvider
+import org.verapdf.gf.foundry.VeraGreenfieldFoundryProvider
 
 @SpringBootApplication
 @EnableRetry
