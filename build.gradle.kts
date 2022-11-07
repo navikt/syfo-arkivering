@@ -30,7 +30,7 @@ repositories {
 ext["okhttp3.version"] = "4.9.3" // For at tester som bruker MockWebServer skal fungere.
 
 val testContainersVersion = "1.17.5"
-val tokenSupportVersion = "2.1.6"
+val tokenSupportVersion = "2.1.7"
 val logstashLogbackEncoderVersion = "7.2"
 val kluentVersion = "1.72"
 val openHtmlToPdfVersion = "1.0.10"
