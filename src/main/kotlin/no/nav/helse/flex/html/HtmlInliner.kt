@@ -26,7 +26,12 @@ class HtmlInliner(
                 if (!href.endsWith(".css")) {
                     throw RuntimeException("Link med href som ikke er .css")
                 }
-                val stylesheet = URL(url + href).readText().replace("@media print", "@media papirprint")
+                val adresse = if (href.startsWith("http")) {
+                    href
+                } else {
+                    "$url$href"
+                }
+                val stylesheet = URL(adresse).readText().replace("@media print", "@media papirprint")
                 it.parent()?.append("<style>\n$stylesheet\n</style>")
                 it.remove()
             } else {
@@ -60,7 +65,12 @@ class HtmlInliner(
         }
         doc.select("img").forEach {
             if (it.hasAttr("src")) {
-                val bildeUrl = url + it.attr("src")
+                val srcAttr = it.attr("src")
+                val bildeUrl = if (srcAttr.startsWith("http")) {
+                    srcAttr
+                } else {
+                    "$url$srcAttr"
+                }
                 if (!bildeUrl.endsWith(".svg")) {
                     throw RuntimeException("Støtter kun svg. Kan ikke laste ned bilde $bildeUrl")
                 }
