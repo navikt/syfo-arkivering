@@ -1,3 +1,4 @@
+db_tier: db-f1-micro
 app: spinnsyn-arkivering
 namespace: flex
 team: flex
