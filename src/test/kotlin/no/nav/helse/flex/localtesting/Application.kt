@@ -1,5 +1,6 @@
 package no.nav.helse.flex.localtesting
 
+import jakarta.servlet.http.HttpServletResponse
 import no.nav.helse.flex.arkivering.PdfSkaperen
 import no.nav.helse.flex.client.SpinnsynFrontendArkiveringClient
 import no.nav.helse.flex.html.HtmlInliner
@@ -13,7 +14,6 @@ import org.springframework.stereotype.Controller
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.ResponseBody
 import org.verapdf.gf.foundry.VeraGreenfieldFoundryProvider
-import javax.servlet.http.HttpServletResponse
 
 @SpringBootApplication(
     exclude = [DataSourceAutoConfiguration::class]

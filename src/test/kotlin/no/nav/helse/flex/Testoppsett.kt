@@ -10,6 +10,7 @@ import org.amshove.kluent.shouldStartWith
 import org.junit.jupiter.api.AfterAll
 import org.junit.jupiter.api.TestInstance
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.jdbc.core.JdbcTemplate
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate
@@ -23,6 +24,7 @@ private class PostgreSQLContainer12 : PostgreSQLContainer<PostgreSQLContainer12>
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @SpringBootTest
 @EnableMockOAuth2Server
+@AutoConfigureMockMvc
 abstract class Testoppsett {
 
     @Autowired
