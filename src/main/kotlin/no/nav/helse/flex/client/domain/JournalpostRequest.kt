@@ -22,7 +22,7 @@ data class AvsenderMottaker(
     val id: String? = null,
     val idType: String? = null,
     val land: String? = null,
-    val navn: String? = null,
+    val navn: String? = null
 )
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
@@ -49,5 +49,5 @@ data class Dokumentvarianter(
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
 data class Sak(
-    val sakstype: String,
+    val sakstype: String
 )

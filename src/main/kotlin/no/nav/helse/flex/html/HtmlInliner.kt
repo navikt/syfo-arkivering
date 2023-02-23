@@ -9,11 +9,10 @@ import java.util.*
 
 @Component
 class HtmlInliner(
-    @Value("\${spinnsyn.frontend.arkivering.url}") private val url: String,
+    @Value("\${spinnsyn.frontend.arkivering.url}") private val url: String
 ) {
 
     fun inlineHtml(html: String): String {
-
         val doc = Jsoup.parse(html)
         doc.select("link").forEach {
             val rel = it.attr("rel")

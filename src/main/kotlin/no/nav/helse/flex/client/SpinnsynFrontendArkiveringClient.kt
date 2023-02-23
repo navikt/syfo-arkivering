@@ -63,6 +63,6 @@ class SpinnsynFrontendArkiveringClient(
         val html: String,
         val versjon: String,
         val fom: LocalDate,
-        val tom: LocalDate,
+        val tom: LocalDate
     )
 }

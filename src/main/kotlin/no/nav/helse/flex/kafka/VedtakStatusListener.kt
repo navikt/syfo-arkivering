@@ -36,5 +36,5 @@ data class VedtakStatusDto(
 
 enum class VedtakStatus {
     MOTATT,
-    LEST,
+    LEST
 }

@@ -9,14 +9,14 @@ import java.time.LocalDate
 @Component
 class PdfSkaperen(
     val spinnsynFrontendArkiveringClient: SpinnsynFrontendArkiveringClient,
-    val htmlInliner: HtmlInliner,
+    val htmlInliner: HtmlInliner
 ) {
 
     data class PdfVedtak(
         val pdf: ByteArray,
         val versjon: String,
         val fom: LocalDate,
-        val tom: LocalDate,
+        val tom: LocalDate
     )
 
     fun hentPdf(fnr: String, id: String): PdfVedtak {

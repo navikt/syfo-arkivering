@@ -34,7 +34,6 @@ class IntegrasjonTest : Testoppsett() {
     @Test
     @Order(1)
     fun `mottar et vedtak som skal arkiveres`() {
-
         enqueFiler()
         val journalpostResponse = JournalpostResponse(
             dokumenter = emptyList(),
@@ -81,7 +80,6 @@ class IntegrasjonTest : Testoppsett() {
     @Test
     @Order(2)
     fun `mottar et duplikat vedtak som ikke arkiveres`() {
-
         arkivertVedtakRepository.count() `should be equal to` 1L
         kafkaProducer.send(
             ProducerRecord(
@@ -100,7 +98,6 @@ class IntegrasjonTest : Testoppsett() {
     @Test
     @Order(3)
     fun `mottar et vedtak som ikke har status LEST som ikke arkiveres`() {
-
         arkivertVedtakRepository.count() `should be equal to` 1L
         kafkaProducer.send(
             ProducerRecord(

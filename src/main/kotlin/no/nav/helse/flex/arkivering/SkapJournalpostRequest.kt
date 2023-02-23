@@ -28,7 +28,7 @@ fun skapJournalpostRequest(
                         fysiskDokument = pdf
                     )
                 ),
-                tittel = tittel,
+                tittel = tittel
             )
         ),
         sak = Sak(
@@ -42,7 +42,7 @@ fun skapJournalpostRequest(
         tittel = tittel,
         avsenderMottaker = AvsenderMottaker(
             id = fnr,
-            idType = "FNR",
+            idType = "FNR"
         )
     )
 }

@@ -28,7 +28,7 @@ class AadRestTemplateConfiguration {
             registrationName = "spinnsyn-frontend-arkivering-credentials",
             restTemplateBuilder = restTemplateBuilder,
             clientConfigurationProperties = clientConfigurationProperties,
-            oAuth2AccessTokenService = oAuth2AccessTokenService,
+            oAuth2AccessTokenService = oAuth2AccessTokenService
         )
 
     @Bean
@@ -41,7 +41,7 @@ class AadRestTemplateConfiguration {
             registrationName = "dokarkiv-client-credentials",
             restTemplateBuilder = restTemplateBuilder,
             clientConfigurationProperties = clientConfigurationProperties,
-            oAuth2AccessTokenService = oAuth2AccessTokenService,
+            oAuth2AccessTokenService = oAuth2AccessTokenService
         )
 
     private fun downstreamRestTemplate(
