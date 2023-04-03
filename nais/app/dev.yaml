@@ -7,6 +7,7 @@ azureTenant: trygdeetaten.no
 ingress: https://spinnsyn-arkivering.intern.dev.nav.no
 external-host:
   - dokarkiv.dev-fss-pub.nais.io
+  - cdn.nav.no
 env:
   SPINNSYN_FRONTEND_ARKIVERING_AAD_CLIENT_ID: dev-gcp.flex.spinnsyn-frontend-arkivering
   SPINNSYN_BACKEND_AAD_CLIENT_ID: dev-gcp.flex.spinnsyn-backend
