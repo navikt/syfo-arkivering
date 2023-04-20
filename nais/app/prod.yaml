@@ -5,7 +5,7 @@ team: flex
 kafkaPool: nav-prod
 azureTenant: nav.no
 cpu: 400m
-memory: 800Mi
+memory: 1536Mi
 external-host:
   - dokarkiv.prod-fss-pub.nais.io
   - cdn.nav.no
