@@ -33,7 +33,7 @@ class PdfSkaperen(
 
     fun hentSomHtmlOgInlineTing(fnr: String, id: String): SpinnsynFrontendArkiveringClient.HtmlVedtak {
         val htmlVedtak = spinnsynFrontendArkiveringClient.hentVedtakSomHtml(fnr = fnr, id = id)
-        return htmlVedtak.copy(html = htmlInliner.inlineHtml(htmlVedtak.html))
+        return htmlVedtak.copy(html = htmlInliner.inlineHtml(htmlVedtak.html, utbetalingId = id, fnr = fnr))
     }
 
     fun hentPdfFraHtml(html: String): ByteArray {

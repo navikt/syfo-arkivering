@@ -1,0 +1,151 @@
+* {
+    font-family: "Source Sans Pro" !important;
+    background-color: white !important;
+    font-size: 18px;
+}
+
+#__next {
+    margin-top: 0cm;
+    margin-right: 1cm;
+    margin-left: 1cm;
+    margin-bottom: 0cm;
+    height: 850px;
+}
+
+h1 {
+    font-size: 2.25rem;
+    margin-top: 20px !important;
+    font-weight: bold;
+
+}
+
+h2 span {
+    font-size: 1.5rem;
+    margin-top: 20px;
+    font-weight: bold;
+
+}
+
+h3 {
+    font-size: 1.125rem;
+    margin-top: 20px !important;
+    font-weight: bold;
+}
+
+h4 {
+    margin-top: 20px !important;
+    font-weight: bold;
+}
+
+td {
+    padding-top: 5px !important;
+}
+
+.navds-label {
+    font-weight: bold;
+}
+
+
+/* person header styling */
+#personinfo {
+    height: 100px;
+    margin-top: 30px;
+    margin-bottom: 30px;
+}
+#navn {
+    font-weight: bold;
+    font-size: 16px;
+    width: 350px;
+}
+
+#personalia {
+    display: inline-block;
+}
+#sendt {
+    display: inline-block;
+    float: right;
+    width: 250px;
+    font-size: 14px;
+}
+
+/* print header og footer styling */
+@page {
+    size: A4 portrait;
+    margin-top: 1cm;
+    margin-right: 0;
+    margin-left: 0;
+    margin-bottom: 0.5cm;
+    padding-bottom: 1cm;
+    @bottom-left {
+        content: element(ark-footer);
+    }
+}
+@page :first {
+    margin-top: 0;
+    @top-left {
+        content: element(ark-header);
+    }
+}
+
+#ark-header {
+    background: #c2eaf7 !important;
+    padding-top: 1cm;
+    padding-right: 0.7cm;
+    padding-left: 0.7cm;
+    padding-bottom: 1cm;
+
+}
+
+#title {
+    display: inline-block;
+    position: absolute;
+    top: -12px;
+    left: 130px;
+    padding-top: 34px;
+    background: #c2eaf7 !important;
+
+}
+#navlogo {
+    display: inline-block;
+    padding-top: 15px;
+    padding-bottom: 12px;
+    margin-left: 3px;
+    width: 48px;
+    background: #c2eaf7 !important;
+}
+#ark-footer {
+    position: running(ark-footer);
+    font-size: 12px;
+    margin-top: -25px;
+    padding-left: 0.6cm;
+}
+
+#pagenumber:before {
+    content: counter(page);
+}
+#pagecount:before {
+    content: counter(pages);
+}
+
+/* tag styling */
+.navds-tag {
+    display: inline-block;
+}
+ .navds-tag.navds-tag--small {
+    padding-left: 4px;
+    padding-right: 4px;
+    font-size: 0.875rem;
+}
+.navds-tag.navds-tag--info {
+    border-color: #368da8;
+}
+.navds-tag.navds-tag--success {
+    border-color: #06893a;
+    min-width: 60px;
+}
+ .navds-tag.navds-tag--warning {
+    border-color: #d47b00;
+}
+.navds-tag.navds-tag--error {
+    border-color: #c30000;
+}

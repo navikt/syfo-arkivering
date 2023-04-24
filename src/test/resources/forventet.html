@@ -1,27 +1,206 @@
 <html>
-<head><title>hei</title>
-    <style>body {
-        background-color: pink;
-    }</style>
-    <style>* {
-        font-family: "SourceSansPro" !important;
-    }
+<head>
+    <title>hei</title>
+    <style>
+        body {
+            background-color: pink;
+        }
 
-    #__next {
-        margin: 0cm 0.7cm;
-        height: 850px;
-    }</style>
+    </style>
+    <style>
+        * {
+            font-family: "Source Sans Pro" !important;
+            background-color: white !important;
+            font-size: 18px;
+        }
+
+        #__next {
+            margin-top: 0cm;
+            margin-right: 1cm;
+            margin-left: 1cm;
+            margin-bottom: 0cm;
+            height: 850px;
+        }
+
+        h1 {
+            font-size: 2.25rem;
+            margin-top: 20px !important;
+            font-weight: bold;
+
+        }
+
+        h2 span {
+            font-size: 1.5rem;
+            margin-top: 20px;
+            font-weight: bold;
+
+        }
+
+        h3 {
+            font-size: 1.125rem;
+            margin-top: 20px !important;
+            font-weight: bold;
+        }
+
+        h4 {
+            margin-top: 20px !important;
+            font-weight: bold;
+        }
+
+        td {
+            padding-top: 5px !important;
+        }
+
+        .navds-label {
+            font-weight: bold;
+        }
+
+
+        /* person header styling */
+        #personinfo {
+            height: 100px;
+            margin-top: 30px;
+            margin-bottom: 30px;
+        }
+
+        #navn {
+            font-weight: bold;
+            font-size: 16px;
+            width: 350px;
+        }
+
+        #personalia {
+            display: inline-block;
+        }
+
+        #sendt {
+            display: inline-block;
+            float: right;
+            width: 250px;
+            font-size: 14px;
+        }
+
+        /* print header og footer styling */
+        @page {
+            size: A4 portrait;
+            margin-top: 1cm;
+            margin-right: 0;
+            margin-left: 0;
+            margin-bottom: 0.5cm;
+            padding-bottom: 1cm;
+            @bottom-left {
+                content: element(ark-footer);
+            }
+        }
+
+        @page :first {
+            margin-top: 0;
+            @top-left {
+                content: element(ark-header);
+            }
+        }
+
+        #ark-header {
+            background: #c2eaf7 !important;
+            padding-top: 1cm;
+            padding-right: 0.7cm;
+            padding-left: 0.7cm;
+            padding-bottom: 1cm;
+
+        }
+
+        #title {
+            display: inline-block;
+            position: absolute;
+            top: -12px;
+            left: 130px;
+            padding-top: 34px;
+            background: #c2eaf7 !important;
+
+        }
+
+        #navlogo {
+            display: inline-block;
+            padding-top: 15px;
+            padding-bottom: 12px;
+            margin-left: 3px;
+            width: 48px;
+            background: #c2eaf7 !important;
+        }
+
+        #ark-footer {
+            position: running(ark-footer);
+            font-size: 12px;
+            margin-top: -25px;
+            padding-left: 0.6cm;
+        }
+
+        #pagenumber:before {
+            content: counter(page);
+        }
+
+        #pagecount:before {
+            content: counter(pages);
+        }
+
+        /* tag styling */
+        .navds-tag {
+            display: inline-block;
+        }
+
+        .navds-tag.navds-tag--small {
+            padding-left: 4px;
+            padding-right: 4px;
+            font-size: 0.875rem;
+        }
+
+        .navds-tag.navds-tag--info {
+            border-color: #368da8;
+        }
+
+        .navds-tag.navds-tag--success {
+            border-color: #06893a;
+            min-width: 60px;
+        }
+
+        .navds-tag.navds-tag--warning {
+            border-color: #d47b00;
+        }
+
+        .navds-tag.navds-tag--error {
+            border-color: #c30000;
+        }
+
+    </style>
 </head>
 <body>
-<div id="ark-header"><h3>Tittelen</h3></div>
-<div class="innhold" id="__next"><h2>Detteerentestside</h2>
-    <svg width="1em" height="1em" viewbox="002424" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <path fill-rule="evenodd" clip-rule="evenodd"
-              d="M4.6256H3a33000-33v12a3300033h16a330003-3v-2a220002-2v-4a22000-2-2V9a33000-2.746-2.99L1704.6256zm4.5840h7.905l-1.216-3.243L9.2096zM198H3a11000-11v12a1100011h16a110001-1v-2h-4a440010-8h4V9a11000-1-1zm-57a220012-2h6v4h-6a22001-2-2zm30a11011-201100120z"
-              fill="#59514B"/>
-    </svg>
-    <img src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjQiIGhlaWdodD0iMjQiIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KICAgIDxwYXRoIGZpbGwtcnVsZT0iZXZlbm9kZCIgY2xpcC1ydWxlPSJldmVub2RkIiBkPSJNMjEuMDcxOSAzLjYwMDk2QzIwLjc5OTMgMy40NTEyIDIwLjQ5MjEgMy4zNTkwNCAyMC4xNTkgMy4zNTkwNEgyLjg3ODk4QzIuNTQ2ODIgMy4zNTkwNCAyLjIzODY2IDMuNDUxMiAxLjk2NjAyIDMuNjAwOTZMMTEuNTE5IDkuNTEzNkwyMS4wNzE5IDMuNjAwOTZaTTIwLjc4MTEgMTAuNzgwOEMyMC45NjgzIDEwLjU5MzYgMjEuMjcyNiAxMC41OTM2IDIxLjQ1OTggMTAuNzgwOEwyMi4wNzkgMTEuNDAxVjUuMjc5MDRDMjIuMDc5IDQuOTEzMjggMjEuOTcxNSA0LjU3NTM2IDIxLjc5MjkgNC4yODM1MkwxMS43NzI0IDEwLjQ4N0MxMS42OTQ3IDEwLjUzNSAxMS42MDczIDEwLjU1OSAxMS41MTkgMTAuNTU5QzExLjQzMTYgMTAuNTU5IDExLjM0MzMgMTAuNTM1IDExLjI2NjUgMTAuNDg3TDEuMjQ2MDIgNC4yODM1MkMxLjA2NzQ2IDQuNTc1MzYgMC45NTg5ODQgNC45MTMyOCAwLjk1ODk4NCA1LjI3OTA0VjE1LjgzOUMwLjk1ODk4NCAxNi44OTc5IDEuODIwMSAxNy43NTkgMi44Nzg5OCAxNy43NTlIMTMuODAzOEwyMC43ODExIDEwLjc4MDhaTTIyLjA3OSAxMi43NTk0TDIzLjg1OTggMTQuNTM5MkMyMy45NSAxNC42Mjk0IDIzLjk5OTkgMTQuNzUyMyAyMy45OTk5IDE0Ljg4QzIzLjk5OTkgMTUuMDA3NyAyMy45NSAxNS4xMjk2IDIzLjg1OTggMTUuMjE5OEwyMi4yNzk2IDE2LjhMMTkuMjAwOSAxMy43MjEzTDIxLjEyMDkgMTEuODAxM0wyMi4wNzkgMTIuNzU5NFpNMTIuNDk4MiAyMi45MDc1QzEyLjQ1MDIgMjMuMDc1NSAxMi40OTcyIDIzLjI1NiAxMi42MjAxIDIzLjM3ODlDMTIuNzQ2OCAyMy41MDY2IDEyLjkzMTEgMjMuNTQ3OCAxMy4wOTE1IDIzLjUwMDhMMTYuMTc5OCAyMi42MTg2TDEzLjM4MDQgMTkuODE5MkwxMi40OTgyIDIyLjkwNzVaTTE1LjE2MjIgMTcuNzU5SDE1LjE2MTJMMTguNTIyMiAxNC4zOTlMMjEuNjAwOSAxNy40Nzc4TDIxLjMxOTYgMTcuNzU5TDE2Ljk5NzcgMjIuMDhMMTMuOTE5IDE5LjAwMTNMMTUuMTYyMiAxNy43NTlaIiBmaWxsPSIjMDA2N0M1Ii8+Cjwvc3ZnPgo="/>
+<div id="ark-header"><img id="navlogo"
+                          src="data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0idXRmLTgiPz4KPCEtLSBHZW5lcmF0b3I6IEFkb2JlIElsbHVzdHJhdG9yIDE2LjIuMSwgU1ZHIEV4cG9ydCBQbHVnLUluIC4gU1ZHIFZlcnNpb246IDYuMDAgQnVpbGQgMCkgIC0tPgo8IURPQ1RZUEUgc3ZnIFBVQkxJQyAiLS8vVzNDLy9EVEQgU1ZHIDEuMS8vRU4iICJodHRwOi8vd3d3LnczLm9yZy9HcmFwaGljcy9TVkcvMS4xL0RURC9zdmcxMS5kdGQiPgo8c3ZnIHZlcnNpb249IjEuMSIgaWQ9IkxheWVyXzEiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgeG1sbnM6eGxpbms9Imh0dHA6Ly93d3cudzMub3JnLzE5OTkveGxpbmsiIHg9IjBweCIgeT0iMHB4IgogICAgIHdpZHRoPSIxMDBweCIgaGVpZ2h0PSI2Mi45NDFweCIgdmlld0JveD0iMCAwIDEwMCA2Mi45NDEiIGVuYWJsZS1iYWNrZ3JvdW5kPSJuZXcgMCAwIDEwMCA2Mi45NDEiIHhtbDpzcGFjZT0icHJlc2VydmUiPgo8Zz4KCTxnPgoJCTxwYXRoIGZpbGw9IiMwMDAwMDAiIGQ9Ik00Ny4yMjEsMzQuNzMzaC0wLjg5M2MtMS4yNywwLTIuMzA0LDEuMDM1LTIuMzA0LDIuMzA2YzAsMS4yNzEsMS4wMzQsMi4zMDMsMi4zMDQsMi4zMDNoMy4xOTR2LTIuMzAzCgkJCUM0OS41MjIsMzUuNzY3LDQ4LjQ4OSwzNC43MzMsNDcuMjIxLDM0LjczM3ogTTQ2LjczNSwwLjQ3Yy0xNy4xMTYsMC0zMC45OTcsMTMuODgxLTMwLjk5NywzMS4wMDIKCQkJYzAsMTcuMTE5LDEzLjg4MSwzMC45OTgsMzAuOTk3LDMwLjk5OGMxNy4xMjQsMCwzMS4wMDYtMTMuODc5LDMxLjAwNi0zMC45OThDNzcuNzQxLDE0LjM1MSw2My44NTgsMC40Nyw0Ni43MzUsMC40N3oKCQkJIE03My41NjYsMjkuODM1bC01LjkyLDE0LjY1NGMtMC4yMDYsMC41Mi0wLjczMywwLjUyLTAuNzMzLDAuNTJoLTUuNjE4YzAsMC0wLjUyNCwwLTAuNzM0LTAuNTJMNTUuMjI0LDMxLjI0djguMTAxaDEuNjk2CgkJCWMwLDAsMC40OTcsMCwwLjQyNSwwLjM5MWgtMC4wMDJjLTAuMDA5LDAuMDM2LTEuOTA5LDQuNzU3LTEuOTA5LDQuNzU3Yy0wLjIxMSwwLjUyLTAuNzMzLDAuNTItMC43MzMsMC41MmgtNC43NTUKCQkJYy0wLjIyOSwwLTAuNDIxLTAuMTg3LTAuNDIxLTAuNDIzdi00LjU1MWwtMS43OTgsNC40NTRjLTAuMjEsMC41Mi0wLjczOCwwLjUyLTAuNzM4LDAuNTJoLTAuNjE0Yy0yLjgwOCwwLTUuMDY2LTEuMTUtNi40MzgtMy4wNzIKCQkJbC0xLjAzMywyLjU1M2MtMC4yMDgsMC41Mi0wLjczMywwLjUyLTAuNzMzLDAuNTJoLTQuNjU3Yy0wLjIzMiwwLTAuNDIxLTAuMTg3LTAuNDIxLTAuNDIzdi01Ljk0OWMwLTEuNzEtMC4wNjQtMi4yODktMC4zMi0yLjc3CgkJCWMtMC4xMjUtMC4yMjctMC4zNTQtMC40Mi0wLjYwOC0wLjUxNmMtMC40MjQtMC4xOTYtMC42NTQtMC4yMjYtMS43NDEtMC4yMjZoLTEuODkzdjkuNDZjMCwwLjIzNS0wLjE5LDAuNDIzLTAuNDIsMC40MjNoLTQuODU4CgkJCWMtMC4yMzcsMC0wLjQyMi0wLjE4Ny0wLjQyMi0wLjQyM3YtOS40NmgtMS44ODRjLTAuNDU4LDAtMC4yNTctMC40OTctMC4yNTctMC40OTdsMi4wMDMtNC45NjgKCQkJYzAuMTM4LTAuMzM1LDAuNTE2LTAuMzM1LDAuNTE2LTAuMzM1aDQuOTAxYzAuMjI5LDAsMC40MiwwLjE5MiwwLjQyLDAuNDIxdjQuNjg5bDEuOTI4LTQuNzc2CgkJCWMwLjEzNS0wLjMzNSwwLjUxOC0wLjMzNSwwLjUxOC0wLjMzNWgyLjExOGMxLjgwNCwwLDIuNjQ0LDAuMTkzLDMuNTc4LDAuNzRjMC40NTQsMC4yOTEsMC44NzEsMC42NDYsMS4xNTksMS4wNjUKCQkJYzAuNjI5LDAuODU1LDAuODIyLDEuNjksMC44NjIsNC4wMjFjMC43MzEtMy41MTMsMy4wNzgtNS44MjYsNi41ODktNS44MjZjMS41NjcsMCw0LjI0NCwxLjA3NSw0LjI0NCwzLjU5di0zLjE2OAoJCQljMC0wLjIyOSwwLjE5Mi0wLjQyMSwwLjQyMS0wLjQyMUg2MC41NGMwLDAsMC4zODMsMCwwLjUxNywwLjMzNWwzLjA0Niw5LjMzNmwzLjA1NC05LjMzNmMwLjEzMy0wLjMzNSwwLjUxMy0wLjMzNSwwLjUxMy0wLjMzNQoJCQloNS41MTFDNzMuMTc4LDI5LjMyNSw3My43NzEsMjkuMzI1LDczLjU2NiwyOS44MzV6IE0wLjc0OCw0NS4wMDloNi4wOTVsNi4zMjgtMTUuNjgzSDcuMDg0TDAuNzQ4LDQ1LjAwOXogTTc4LjkzNCw0NS4wMDloMy4zMTkKCQkJbDYuMjU2LTE1LjY4M0g4NS4xOUw3OC45MzQsNDUuMDA5eiBNOTcuNDg4LDI5LjMyNWwtNi4yNTMsMTUuNjgzaDEuNzYybDYuMjU1LTE1LjY4M0g5Ny40ODh6Ii8+Cgk8L2c+CjwvZz4KPC9zdmc+Cg=="
+                          alt=""/>
+    <h1 id="title">Svar på søknad om sykepenger</h1>
 </div>
-<div id="ark-footer"><h3>Footeren</h3></div>
+<div class="innhold" id="__next">
+    <div id="personinfo">
+        <div id="personalia">
+            <p id="navn">130687 12345</p>
+        </div>
+        <div id="sendt">
+            <p>Dokument opprettet <br/>
+                1970-01-01T01:00:00+01:00</p>
+        </div>
+    </div>
+    <h2>Dette er en testside</h2>
+    <section class="arkivering-flex-fix justify-between">
+        <div>
+            denne
+        </div>
+        <div>
+            har fix på seg
+        </div>
+    </section>
+</div>
+<div id="ark-footer"><span>331c9cf7-b2b4-4c60-938d-00ac3969666b</span> <span style="float: right">side <span
+        id="pagenumber"></span> av <span id="pagecount"></span></span>
+</div>
 </body>
 </html>

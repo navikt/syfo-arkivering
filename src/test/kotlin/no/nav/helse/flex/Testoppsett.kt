@@ -84,7 +84,6 @@ abstract class Testoppsett {
     fun enqueFiler() {
         enqueFil("/testside.html", imageName = "docker.github/spinnsyn-frontend-v2.0", fom = "2020-03-12", tom = "2020-04-30")
         enqueFil("/stylesheet.css")
-        enqueFil("/ikon-skriv-til-oss.svg")
     }
 
     fun enqueFil(fil: String, imageName: String? = null, fom: String? = null, tom: String? = null) {
@@ -114,10 +113,5 @@ abstract class Testoppsett {
         stylesheetRequest.path `should be equal to` "/syk/sykepenger/_next/static/css/yes.css"
         stylesheetRequest.headers["fnr"].shouldBeNull()
         stylesheetRequest.headers["Authorization"].shouldBeNull()
-
-        val svgRequest = spinnsynArkiveringFrontendMockWebServer.takeRequest()
-        svgRequest.path `should be equal to` "/public/ikon-skriv-til-oss.svg"
-        svgRequest.headers["fnr"].shouldBeNull()
-        svgRequest.headers["Authorization"].shouldBeNull()
     }
 }

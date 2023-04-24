@@ -5,6 +5,11 @@ import org.jsoup.nodes.Document
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Component
 import java.net.URL
+import java.time.Clock
+import java.time.Instant
+import java.time.ZoneId
+import java.time.format.DateTimeFormatter
+import java.time.format.DateTimeFormatterBuilder
 import java.util.*
 
 @Component
@@ -12,7 +17,23 @@ class HtmlInliner(
     @Value("\${spinnsyn.frontend.arkivering.url}") private val url: String
 ) {
 
-    fun inlineHtml(html: String): String {
+    var clock = Clock.systemDefaultZone()
+
+    val stylingCss =
+        this::class.java.getResourceAsStream("/arkivering/styling.css").readBytes().toString(Charsets.UTF_8)
+
+    val footer =
+        this::class.java.getResourceAsStream("/arkivering/footer.html").readBytes().toString(Charsets.UTF_8)
+    val header =
+        this::class.java.getResourceAsStream("/arkivering/header.html").readBytes().toString(Charsets.UTF_8)
+    val personinfo =
+        this::class.java.getResourceAsStream("/arkivering/personinfo.html").readBytes().toString(Charsets.UTF_8)
+
+    val navSvg = this::class.java.getResourceAsStream("/arkivering/nav.svg").readBytes().toString(Charsets.UTF_8)
+    val navSvgB64 =
+        "data:image/svg+xml;base64," + Base64.getEncoder().encodeToString(navSvg.toByteArray(Charsets.UTF_8))
+
+    fun inlineHtml(html: String, utbetalingId: String, fnr: String): String {
         val doc = Jsoup.parse(html)
         doc.select("link").forEach {
             val rel = it.attr("rel")
@@ -30,26 +51,37 @@ class HtmlInliner(
                 } else {
                     "$url$href"
                 }
-                val stylesheet = URL(adresse).readText().replace("@media print", "@media papirprint")
+                val stylesheet = URL(adresse).readText()
+                    .replace("@media print", "@media papirprint")
+                    .replace("&", "&amp;")
+
                 it.parent()?.append("<style>\n$stylesheet\n</style>")
                 it.remove()
             } else {
                 throw RuntimeException("Link uten href")
             }
         }
-        val tvungenFontStyle = """
+        doc.select(".flex").forEach {
+            if (!it.hasClass("arkivering-flex-fix")) {
+                throw RuntimeException("Flex-styling er ikke støttet")
+            }
+            if (it.childrenSize() != 2) {
+                throw RuntimeException("arkivering-flex-fix må ha 2 children")
+            }
+
+            it.removeClass("flex")
+            it.firstChild()!!.attr("style", "display: inline-block; width: 49%;")
+            it.lastChild()!!.attr("style", "display: inline-block; width: 49%; text-align: right;")
+        }
+
+        doc.select("head").forEach {
+            it.append(
+                """
     <style>
-        * {
-            font-family: "Source Sans Pro" !important;
-        }
-        #__next {
-            margin: 0cm 0.7cm;
-            height: 850px;
-        }
+$stylingCss
     </style>            
         """
-        doc.select("head").forEach {
-            it.append(tvungenFontStyle)
+            )
         }
         doc.select("script").forEach {
             it.remove()
@@ -58,32 +90,18 @@ class HtmlInliner(
             it.remove()
         }
         doc.select("svg").forEach {
-            if (!it.hasAttr("xmlns")) {
-                it.attr("xmlns", "http://www.w3.org/2000/svg")
-            }
+            it.remove()
         }
         doc.select("img").forEach {
-            if (it.hasAttr("src")) {
-                val srcAttr = it.attr("src")
-                val bildeUrl = if (srcAttr.startsWith("http")) {
-                    srcAttr
-                } else {
-                    "$url$srcAttr"
-                }
-                if (!bildeUrl.endsWith(".svg")) {
-                    throw RuntimeException("Støtter kun svg. Kan ikke laste ned bilde $bildeUrl")
-                }
-                val img = URL(bildeUrl).readText()
-                if (!img.contains("http://www.w3.org/2000/svg")) {
-                    throw RuntimeException("$bildeUrl mangler xmlns:http://www.w3.org/2000/svg tag")
-                }
-                val b64img = Base64.getEncoder().encodeToString(img.toByteArray())
-                it.removeAttr("src")
-                it.attr("src", "data:image/svg+xml;base64,$b64img")
-            }
+            it.remove()
         }
-        val arkHeader = doc.selectFirst("#ark-header") ?: throw RuntimeException("Må ha ark header")
-        val arkFooter = doc.selectFirst("#ark-footer") ?: throw RuntimeException("Må ha ark footer")
+        val arkHeader = Jsoup.parse(header.replace("##NAVLOGOSVG##", navSvgB64))
+        val arkFooter = Jsoup.parse(footer.replace("##UTBETALINGID##", utbetalingId))
+        val personinfo = Jsoup.parse(
+            personinfo
+                .replace("##FNR##", fnrForVisning(fnr))
+                .replace("##TIDSSTEMPEL##", tidsstempel())
+        )
         val body = doc.selectFirst("body") ?: throw RuntimeException("Må ha html body")
         if (body.children().size != 1) {
             throw RuntimeException("Forventa bare en child til body")
@@ -92,13 +110,30 @@ class HtmlInliner(
         if (!first.hasAttr("id") || first.attr("id") != "__next") {
             throw RuntimeException("Forventa at første child har id __next")
         }
-        arkHeader.remove()
-        arkFooter.remove()
-        body.child(0).before(arkHeader)
-        body.appendChild(arkFooter)
+
+        body.child(0).child(0).removeAttr("class")
+        body.child(0).child(0).before(personinfo.body().firstChild()!!)
+        body.child(0).before(arkHeader.body().firstChild()!!)
+        body.appendChild(arkFooter.body().firstChild()!!)
 
         doc.outputSettings().syntax(Document.OutputSettings.Syntax.xml)
 
         return doc.toString()
+    }
+
+    fun fnrForVisning(fnr: String): String {
+        return "${fnr.slice(0..5)} ${fnr.slice(6 until fnr.length)}"
+    }
+
+    fun tidsstempel(): String {
+        val currentDateTimeInOslo = Instant.now(clock).atZone(ZoneId.of("Europe/Oslo")).withNano(0)
+        val formatter = DateTimeFormatterBuilder()
+            .append(DateTimeFormatter.ISO_LOCAL_DATE_TIME)
+            .optionalStart()
+            .appendOffsetId()
+            .optionalStart()
+            .parseCaseSensitive()
+            .toFormatter()
+        return currentDateTimeInOslo.format(formatter)
     }
 }

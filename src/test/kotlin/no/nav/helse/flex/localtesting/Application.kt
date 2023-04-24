@@ -43,18 +43,18 @@ class TestController() {
     }
 
     @ResponseBody
-    @GetMapping(value = ["/api/test/"], produces = [MediaType.TEXT_HTML_VALUE])
+    @GetMapping(value = ["/api/test", "/api/test/"], produces = [MediaType.TEXT_HTML_VALUE])
     fun hentHtml(response: HttpServletResponse): String {
-        val hentSomHtmlOgInlineTing = pdfSkaperen.hentSomHtmlOgInlineTing(fnr = "whatever", id = "utvikling-arkivering")
+        val hentSomHtmlOgInlineTing = pdfSkaperen.hentSomHtmlOgInlineTing(fnr = "12345554488", id = "utvikling-arkivering")
         return hentSomHtmlOgInlineTing.html
     }
 
     @ResponseBody
-    @GetMapping(value = ["/api/test/pdf/"], produces = [MediaType.APPLICATION_OCTET_STREAM_VALUE])
+    @GetMapping(value = ["/api/test/pdf/", "/api/test/pdf"], produces = [MediaType.APPLICATION_OCTET_STREAM_VALUE])
     fun hentPdf(
         response: HttpServletResponse
     ): ByteArray {
-        val hentPdf = pdfSkaperen.hentPdf(fnr = "whatever", id = "utvikling-arkivering")
+        val hentPdf = pdfSkaperen.hentPdf(fnr = "12345554488", id = "utvikling-arkivering")
         response.setHeader("x-nais-app-image", hentPdf.versjon)
 
         return hentPdf.pdf
