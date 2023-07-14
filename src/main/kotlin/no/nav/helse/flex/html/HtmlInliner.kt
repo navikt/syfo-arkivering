@@ -62,16 +62,18 @@ class HtmlInliner(
             }
         }
         doc.select(".flex").forEach {
-            if (!it.hasClass("arkivering-flex-fix")) {
+            if (!(it.hasClass("arkivering-flex-fix") || it.hasClass("flex-arkivering-ignore"))) {
                 throw RuntimeException("Flex-styling er ikke støttet")
             }
-            if (it.childrenSize() != 2) {
-                throw RuntimeException("arkivering-flex-fix må ha 2 children")
-            }
+            if (it.hasClass("arkivering-flex-fix")) {
+                if (it.childrenSize() != 2) {
+                    throw RuntimeException("arkivering-flex-fix må ha 2 children")
+                }
 
-            it.removeClass("flex")
-            it.firstChild()!!.attr("style", "display: inline-block; width: 49%;")
-            it.lastChild()!!.attr("style", "display: inline-block; width: 49%; text-align: right;")
+                it.removeClass("flex")
+                it.firstChild()!!.attr("style", "display: inline-block; width: 49%;")
+                it.lastChild()!!.attr("style", "display: inline-block; width: 49%; text-align: right;")
+            }
         }
 
         doc.select("head").forEach {

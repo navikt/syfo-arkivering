@@ -6,7 +6,7 @@ kafkaPool: nav-dev
 azureTenant: trygdeetaten.no
 ingress: https://spinnsyn-arkivering.intern.dev.nav.no
 cpu: 100m
-memory: 400Mi
+memory: 600Mi
 external-host:
   - dokarkiv.dev-fss-pub.nais.io
   - cdn.nav.no
