@@ -15,7 +15,6 @@ java.sourceCompatibility = JavaVersion.VERSION_17
 
 repositories {
     mavenCentral()
-    maven(url = "https://jitpack.io")
     maven {
         url = uri("https://maven.pkg.github.com/navikt/maven-release")
     }
