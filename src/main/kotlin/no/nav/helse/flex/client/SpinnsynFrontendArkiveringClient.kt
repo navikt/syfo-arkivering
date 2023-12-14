@@ -14,28 +14,34 @@ import java.time.LocalDate
 @Component
 class SpinnsynFrontendArkiveringClient(
     private val spinnsynFrontendArkiveringRestTemplate: RestTemplate,
-    @Value("\${spinnsyn.frontend.arkivering.url}") private val url: String
+    @Value("\${spinnsyn.frontend.arkivering.url}") private val url: String,
 ) {
-
     @Retryable
-    fun hentVedtakSomHtml(fnr: String, id: String): HtmlVedtak {
+    fun hentVedtakSomHtml(
+        fnr: String,
+        id: String,
+    ): HtmlVedtak {
         return hentVedtak(fnr = fnr, id = id)
     }
 
-    private fun hentVedtak(fnr: String, id: String): HtmlVedtak {
+    private fun hentVedtak(
+        fnr: String,
+        id: String,
+    ): HtmlVedtak {
         val uriBuilder = UriComponentsBuilder.fromHttpUrl("$url/syk/sykepenger/vedtak/arkivering/$id")
 
         val headers = HttpHeaders()
         headers["fnr"] = fnr
 
         // Kaster RestTemplateException for alle 4xx og 5xx HTTP statuskoder.
-        val result = spinnsynFrontendArkiveringRestTemplate
-            .exchange(
-                uriBuilder.toUriString(),
-                HttpMethod.GET,
-                HttpEntity<Any>(headers),
-                String::class.java
-            )
+        val result =
+            spinnsynFrontendArkiveringRestTemplate
+                .exchange(
+                    uriBuilder.toUriString(),
+                    HttpMethod.GET,
+                    HttpEntity<Any>(headers),
+                    String::class.java,
+                )
 
         // TODO: Kommer ikke hit for annet enn 2xx og 3xx statuskoder så sjekken har ikke så mye verdi.
         if (result.statusCode != OK) {
@@ -52,7 +58,7 @@ class SpinnsynFrontendArkiveringClient(
                 html = it,
                 versjon = versjon,
                 fom = LocalDate.parse(fom),
-                tom = LocalDate.parse(tom)
+                tom = LocalDate.parse(tom),
             )
         }
 
@@ -63,6 +69,6 @@ class SpinnsynFrontendArkiveringClient(
         val html: String,
         val versjon: String,
         val fom: LocalDate,
-        val tom: LocalDate
+        val tom: LocalDate,
     )
 }

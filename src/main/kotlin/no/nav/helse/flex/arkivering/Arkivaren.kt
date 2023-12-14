@@ -17,9 +17,8 @@ class Arkivaren(
     val arkivertVedtakRepository: ArkivertVedtakRepository,
     val registry: MeterRegistry,
     @Value("\${nais.app.image}")
-    val naisAppImage: String
+    val naisAppImage: String,
 ) {
-
     val log = logger()
 
     val norskDato: DateTimeFormatter = DateTimeFormatter.ofPattern("dd.MM.yyyy")
@@ -35,11 +34,15 @@ class Arkivaren(
         return lagreJournalpost(fnr = vedtak.fnr, id = vedtak.id)
     }
 
-    private fun lagreJournalpost(fnr: String, id: String): Int {
+    private fun lagreJournalpost(
+        fnr: String,
+        id: String,
+    ): Int {
         val vedtaket = pdfSkaperen.hentPdf(fnr = fnr, id = id)
 
-        val tittel = "Svar på søknad om sykepenger for periode: ${vedtaket.fom.format(norskDato)} " +
-            "til ${vedtaket.tom.format(norskDato)}"
+        val tittel =
+            "Svar på søknad om sykepenger for periode: ${vedtaket.fom.format(norskDato)} " +
+                "til ${vedtaket.tom.format(norskDato)}"
         val request = skapJournalpostRequest(fnr, id, vedtaket.pdf, tittel)
         val journalpostResponse = dokArkivClient.opprettJournalpost(request, id)
 
@@ -55,8 +58,8 @@ class Arkivaren(
                 journalpostId = journalpostResponse.journalpostId,
                 opprettet = Instant.now(),
                 spinnsynArkiveringImage = naisAppImage,
-                spinnsynFrontendImage = vedtaket.versjon
-            )
+                spinnsynFrontendImage = vedtaket.versjon,
+            ),
         )
         log.info("Arkiverte vedtak $id")
         registry.counter("vedtak_arkivert").increment()

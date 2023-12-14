@@ -14,9 +14,8 @@ import java.util.*
 
 @Component
 class HtmlInliner(
-    @Value("\${spinnsyn.frontend.arkivering.url}") private val url: String
+    @Value("\${spinnsyn.frontend.arkivering.url}") private val url: String,
 ) {
-
     var clock = Clock.systemDefaultZone()
 
     val stylingCss =
@@ -33,7 +32,11 @@ class HtmlInliner(
     val navSvgB64 =
         "data:image/svg+xml;base64," + Base64.getEncoder().encodeToString(navSvg.toByteArray(Charsets.UTF_8))
 
-    fun inlineHtml(html: String, utbetalingId: String, fnr: String): String {
+    fun inlineHtml(
+        html: String,
+        utbetalingId: String,
+        fnr: String,
+    ): String {
         val doc = Jsoup.parse(html)
         doc.select("link").forEach {
             val rel = it.attr("rel")
@@ -46,14 +49,16 @@ class HtmlInliner(
                 if (!href.endsWith(".css")) {
                     throw RuntimeException("Link med href som ikke er .css")
                 }
-                val adresse = if (href.startsWith("http")) {
-                    href
-                } else {
-                    "$url$href"
-                }
-                val stylesheet = URL(adresse).readText()
-                    .replace("@media print", "@media papirprint")
-                    .replace("&", "&amp;")
+                val adresse =
+                    if (href.startsWith("http")) {
+                        href
+                    } else {
+                        "$url$href"
+                    }
+                val stylesheet =
+                    URL(adresse).readText()
+                        .replace("@media print", "@media papirprint")
+                        .replace("&", "&amp;")
 
                 it.parent()?.append("<style>\n$stylesheet\n</style>")
                 it.remove()
@@ -82,7 +87,7 @@ class HtmlInliner(
     <style>
 $stylingCss
     </style>            
-        """
+        """,
             )
         }
         doc.select("script").forEach {
@@ -99,11 +104,12 @@ $stylingCss
         }
         val arkHeader = Jsoup.parse(header.replace("##NAVLOGOSVG##", navSvgB64))
         val arkFooter = Jsoup.parse(footer.replace("##UTBETALINGID##", utbetalingId))
-        val personinfo = Jsoup.parse(
-            personinfo
-                .replace("##FNR##", fnrForVisning(fnr))
-                .replace("##TIDSSTEMPEL##", tidsstempel())
-        )
+        val personinfo =
+            Jsoup.parse(
+                personinfo
+                    .replace("##FNR##", fnrForVisning(fnr))
+                    .replace("##TIDSSTEMPEL##", tidsstempel()),
+            )
         val body = doc.selectFirst("body") ?: throw RuntimeException("Må ha html body")
         if (body.children().size != 1) {
             throw RuntimeException("Forventa bare en child til body")
@@ -129,13 +135,14 @@ $stylingCss
 
     fun tidsstempel(): String {
         val currentDateTimeInOslo = Instant.now(clock).atZone(ZoneId.of("Europe/Oslo")).withNano(0)
-        val formatter = DateTimeFormatterBuilder()
-            .append(DateTimeFormatter.ISO_LOCAL_DATE_TIME)
-            .optionalStart()
-            .appendOffsetId()
-            .optionalStart()
-            .parseCaseSensitive()
-            .toFormatter()
+        val formatter =
+            DateTimeFormatterBuilder()
+                .append(DateTimeFormatter.ISO_LOCAL_DATE_TIME)
+                .optionalStart()
+                .appendOffsetId()
+                .optionalStart()
+                .parseCaseSensitive()
+                .toFormatter()
         return currentDateTimeInOslo.format(formatter)
     }
 }

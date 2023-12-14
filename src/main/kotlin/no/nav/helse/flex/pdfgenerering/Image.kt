@@ -13,13 +13,21 @@ fun toPortait(image: BufferedImage): BufferedImage {
         return image
     }
 
-    val rotateTransform = AffineTransform.getRotateInstance(Math.toRadians(90.0), (image.height / 2f).toDouble(), (image.height / 2f).toDouble())
+    val rotateTransform =
+        AffineTransform.getRotateInstance(
+            Math.toRadians(90.0),
+            (image.height / 2f).toDouble(),
+            (image.height / 2f).toDouble(),
+        )
 
     return AffineTransformOp(rotateTransform, AffineTransformOp.TYPE_BILINEAR)
         .filter(image, BufferedImage(image.height, image.width, image.type))
 }
 
-fun scale(image: PDImageXObject, page: PDPage): ImageSize {
+fun scale(
+    image: PDImageXObject,
+    page: PDPage,
+): ImageSize {
     var width = image.width.toFloat()
     var height = image.height.toFloat()
 

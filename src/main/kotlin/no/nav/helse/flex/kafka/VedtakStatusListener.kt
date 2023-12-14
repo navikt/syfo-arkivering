@@ -10,14 +10,16 @@ import org.springframework.stereotype.Component
 
 @Component
 class VedtakStatusListener(
-    val arkivaren: Arkivaren
+    val arkivaren: Arkivaren,
 ) {
-
     @KafkaListener(
         topics = [FLEX_VEDTAK_STATUS_TOPIC],
-        containerFactory = "aivenKafkaListenerContainerFactory"
+        containerFactory = "aivenKafkaListenerContainerFactory",
     )
-    fun listen(cr: ConsumerRecord<String, String>, acknowledgment: Acknowledgment) {
+    fun listen(
+        cr: ConsumerRecord<String, String>,
+        acknowledgment: Acknowledgment,
+    ) {
         val vedtak = cr.value().tilVedtak()
         arkivaren.arkiverVedtak(vedtak)
         acknowledgment.acknowledge()
@@ -31,10 +33,10 @@ const val FLEX_VEDTAK_STATUS_TOPIC = "flex.vedtak-status"
 data class VedtakStatusDto(
     val id: String,
     val fnr: String,
-    val vedtakStatus: VedtakStatus
+    val vedtakStatus: VedtakStatus,
 )
 
 enum class VedtakStatus {
     MOTATT,
-    LEST
+    LEST,
 }

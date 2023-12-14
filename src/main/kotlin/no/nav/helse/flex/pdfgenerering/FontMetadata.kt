@@ -7,7 +7,7 @@ data class FontMetadata(
     val path: String,
     val weight: Int,
     val style: BaseRendererBuilder.FontStyle,
-    val subset: Boolean
+    val subset: Boolean,
 ) {
     val bytes: ByteArray = FontMetadata::class.java.getResourceAsStream("/fonts/" + path).readAllBytes()
 }

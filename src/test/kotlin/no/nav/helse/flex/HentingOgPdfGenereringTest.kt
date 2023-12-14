@@ -13,7 +13,6 @@ import java.time.OffsetDateTime
 import java.time.ZoneId
 
 class HentingOgPdfGenereringTest : Testoppsett() {
-
     @Autowired
     lateinit var arkivaren: PdfSkaperen
 
@@ -51,12 +50,13 @@ class HentingOgPdfGenereringTest : Testoppsett() {
             "/flexstyling.html",
             imageName = "docker.github/spinnsyn-frontend-v2.0",
             fom = "2020-03-12",
-            tom = "2020-04-30"
+            tom = "2020-04-30",
         )
 
-        val ex = assertThrows(RuntimeException::class.java) {
-            arkivaren.hentSomHtmlOgInlineTing(fnr, uuid)
-        }
+        val ex =
+            assertThrows(RuntimeException::class.java) {
+                arkivaren.hentSomHtmlOgInlineTing(fnr, uuid)
+            }
 
         ex.message `should be equal to` "Flex-styling er ikke støttet"
 
@@ -70,12 +70,13 @@ class HentingOgPdfGenereringTest : Testoppsett() {
             "/ingen__next.html",
             imageName = "docker.github/spinnsyn-frontend-v2.0",
             fom = "2020-03-12",
-            tom = "2020-04-30"
+            tom = "2020-04-30",
         )
 
-        val ex = assertThrows(RuntimeException::class.java) {
-            arkivaren.hentSomHtmlOgInlineTing(fnr, uuid)
-        }
+        val ex =
+            assertThrows(RuntimeException::class.java) {
+                arkivaren.hentSomHtmlOgInlineTing(fnr, uuid)
+            }
 
         ex.message `should be equal to` "Forventa at første child har id __next"
 
@@ -89,12 +90,13 @@ class HentingOgPdfGenereringTest : Testoppsett() {
             "/flere_child_til_body.html",
             imageName = "docker.github/spinnsyn-frontend-v2.0",
             fom = "2020-03-12",
-            tom = "2020-04-30"
+            tom = "2020-04-30",
         )
 
-        val ex = assertThrows(RuntimeException::class.java) {
-            arkivaren.hentSomHtmlOgInlineTing(fnr, uuid)
-        }
+        val ex =
+            assertThrows(RuntimeException::class.java) {
+                arkivaren.hentSomHtmlOgInlineTing(fnr, uuid)
+            }
 
         ex.message `should be equal to` "Forventa bare en child til body"
 

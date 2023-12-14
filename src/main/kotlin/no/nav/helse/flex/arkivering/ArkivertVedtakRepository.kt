@@ -18,5 +18,5 @@ data class ArkivertVedtak(
     val journalpostId: String,
     val opprettet: Instant,
     val spinnsynFrontendImage: String,
-    val spinnsynArkiveringImage: String
+    val spinnsynArkiveringImage: String,
 )

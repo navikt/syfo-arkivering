@@ -24,7 +24,6 @@ private class PostgreSQLContainer12 : PostgreSQLContainer<PostgreSQLContainer12>
 @EnableMockOAuth2Server
 @AutoConfigureMockMvc
 abstract class Testoppsett {
-
     @Autowired
     lateinit var arkivertVedtakRepository: ArkivertVedtakRepository
 
@@ -48,23 +47,26 @@ abstract class Testoppsett {
                 System.setProperty("KAFKA_BROKERS", it.bootstrapServers)
             }
 
-            spinnsynArkiveringFrontendMockWebServer = MockWebServer()
-                .also { it.start() }
-                .also {
-                    System.setProperty("spinnsyn.frontend.arkivering.url", "http://localhost:${it.port}")
-                }
+            spinnsynArkiveringFrontendMockWebServer =
+                MockWebServer()
+                    .also { it.start() }
+                    .also {
+                        System.setProperty("spinnsyn.frontend.arkivering.url", "http://localhost:${it.port}")
+                    }
 
-            spinnsynBackendMockWebServer = MockWebServer()
-                .also { it.start() }
-                .also {
-                    System.setProperty("spinnsyn.backend.url", "http://localhost:${it.port}")
-                }
+            spinnsynBackendMockWebServer =
+                MockWebServer()
+                    .also { it.start() }
+                    .also {
+                        System.setProperty("spinnsyn.backend.url", "http://localhost:${it.port}")
+                    }
 
-            dokarkivMockWebServer = MockWebServer()
-                .also { it.start() }
-                .also {
-                    System.setProperty("dokarkiv.url", "http://localhost:${it.port}")
-                }
+            dokarkivMockWebServer =
+                MockWebServer()
+                    .also { it.start() }
+                    .also {
+                        System.setProperty("dokarkiv.url", "http://localhost:${it.port}")
+                    }
         }
     }
 
@@ -78,7 +80,12 @@ abstract class Testoppsett {
         enqueFil("/stylesheet.css")
     }
 
-    fun enqueFil(fil: String, imageName: String? = null, fom: String? = null, tom: String? = null) {
+    fun enqueFil(
+        fil: String,
+        imageName: String? = null,
+        fom: String? = null,
+        tom: String? = null,
+    ) {
         val innhold = HentingOgPdfGenereringTest::class.java.getResource(fil).readText()
 
         val response = MockResponse().setBody(innhold)
@@ -95,7 +102,10 @@ abstract class Testoppsett {
         spinnsynArkiveringFrontendMockWebServer.enqueue(response)
     }
 
-    fun validerRequests(uuid: String, fnr: String) {
+    fun validerRequests(
+        uuid: String,
+        fnr: String,
+    ) {
         val htmlRequest = spinnsynArkiveringFrontendMockWebServer.takeRequest()
         htmlRequest.path `should be equal to` "/syk/sykepenger/vedtak/arkivering/$uuid"
         htmlRequest.headers["fnr"] `should be equal to` fnr

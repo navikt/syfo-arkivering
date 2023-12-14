@@ -9,6 +9,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration
 import org.springframework.boot.runApplication
 import org.springframework.boot.web.client.RestTemplateBuilder
+import org.springframework.context.annotation.Profile
 import org.springframework.http.MediaType
 import org.springframework.stereotype.Controller
 import org.springframework.web.bind.annotation.GetMapping
@@ -16,8 +17,11 @@ import org.springframework.web.bind.annotation.ResponseBody
 import org.verapdf.gf.foundry.VeraGreenfieldFoundryProvider
 
 @SpringBootApplication(
-    exclude = [DataSourceAutoConfiguration::class]
+    exclude = [DataSourceAutoConfiguration::class],
 )
+// Bruker annen profil for å skille Application fra Application i no.nav.helse.flex etter oppgradering til
+// Spring Boot 3.2.0. Husk å angi at ActiveProfile er "localtesting" i Run Configuration.
+@Profile("localtesting")
 class Application
 
 fun main(args: Array<String>) {
@@ -28,17 +32,17 @@ fun main(args: Array<String>) {
 @Controller
 @Unprotected
 class TestController() {
-
     final val pdfSkaperen: PdfSkaperen
 
     init {
         val url = "http://localhost:8080"
 
         val htmlInliner = HtmlInliner(url)
-        val spinnsynFrontendArkiveringClient = SpinnsynFrontendArkiveringClient(
-            spinnsynFrontendArkiveringRestTemplate = RestTemplateBuilder().build(),
-            url = url
-        )
+        val spinnsynFrontendArkiveringClient =
+            SpinnsynFrontendArkiveringClient(
+                spinnsynFrontendArkiveringRestTemplate = RestTemplateBuilder().build(),
+                url = url,
+            )
         pdfSkaperen = PdfSkaperen(spinnsynFrontendArkiveringClient, htmlInliner)
     }
 
@@ -51,9 +55,7 @@ class TestController() {
 
     @ResponseBody
     @GetMapping(value = ["/api/test/pdf/", "/api/test/pdf"], produces = [MediaType.APPLICATION_OCTET_STREAM_VALUE])
-    fun hentPdf(
-        response: HttpServletResponse
-    ): ByteArray {
+    fun hentPdf(response: HttpServletResponse): ByteArray {
         val hentPdf = pdfSkaperen.hentPdf(fnr = "12345554488", id = "utvikling-arkivering")
         response.setHeader("x-nais-app-image", hentPdf.versjon)
 

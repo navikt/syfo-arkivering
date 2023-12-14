@@ -18,11 +18,13 @@ import org.springframework.web.client.RestTemplate
 @Controller
 class DokArkivClient(
     private val dokarkivRestTemplate: RestTemplate,
-    @Value("\${dokarkiv.url}") private val dokarkivUrl: String
+    @Value("\${dokarkiv.url}") private val dokarkivUrl: String,
 ) {
-
     @Retryable(backoff = Backoff(delay = 5000))
-    fun opprettJournalpost(pdfRequest: JournalpostRequest, vedtakId: String): JournalpostResponse {
+    fun opprettJournalpost(
+        pdfRequest: JournalpostRequest,
+        vedtakId: String,
+    ): JournalpostResponse {
         try {
             val url = "$dokarkivUrl/rest/journalpostapi/v1/journalpost?forsoekFerdigstill=true"
 

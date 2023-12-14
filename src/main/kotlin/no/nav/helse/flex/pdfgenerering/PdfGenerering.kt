@@ -24,30 +24,35 @@ object PdfGenerering {
     }
 
     fun createPDFA(html: String): ByteArray {
-        val pdf = ByteArrayOutputStream().apply {
-            PdfRendererBuilder()
-                .apply {
-                    for (font in fonts) {
-                        useFont({ ByteArrayInputStream(font.bytes) }, font.family, font.weight, font.style, font.subset)
+        val pdf =
+            ByteArrayOutputStream().apply {
+                PdfRendererBuilder()
+                    .apply {
+                        for (font in fonts) {
+                            useFont({ ByteArrayInputStream(font.bytes) }, font.family, font.weight, font.style, font.subset)
+                        }
                     }
-                }
-                .usePdfAConformance(PdfRendererBuilder.PdfAConformance.PDFA_2_U)
-                .useColorProfile(colorProfile)
-                .useSVGDrawer(BatikSVGDrawer())
-                .withHtmlContent(html, null)
-                .toStream(this)
-                .run()
-        }.toByteArray()
+                    .usePdfAConformance(PdfRendererBuilder.PdfAConformance.PDFA_2_U)
+                    .useColorProfile(colorProfile)
+                    .useSVGDrawer(BatikSVGDrawer())
+                    .withHtmlContent(html, null)
+                    .toStream(this)
+                    .run()
+            }.toByteArray()
         require(verifyCompliance(pdf)) { "Non-compliant PDF/A :(" }
         return pdf
     }
 
-    private fun verifyCompliance(input: ByteArray, flavour: PDFAFlavour = PDFAFlavour.PDFA_2_U): Boolean {
+    private fun verifyCompliance(
+        input: ByteArray,
+        flavour: PDFAFlavour = PDFAFlavour.PDFA_2_U,
+    ): Boolean {
         val pdf = ByteArrayInputStream(input)
         val validator = Foundries.defaultInstance().createValidator(flavour, false)
         val result = Foundries.defaultInstance().createParser(pdf).use { validator.validate(it) }
-        val failures = result.testAssertions
-            .filter { it.status != TestAssertion.Status.PASSED }
+        val failures =
+            result.testAssertions
+                .filter { it.status != TestAssertion.Status.PASSED }
         failures.forEach { test ->
             log.warn(test.message)
             log.warn("Location ${test.location.context} ${test.location.level}")

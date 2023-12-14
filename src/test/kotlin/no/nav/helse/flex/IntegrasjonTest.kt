@@ -24,7 +24,6 @@ import java.util.concurrent.TimeUnit
 
 @TestMethodOrder(MethodOrderer.OrderAnnotation::class)
 class IntegrasjonTest : Testoppsett() {
-
     @Autowired
     lateinit var kafkaProducer: KafkaProducer<String, String>
 
@@ -35,14 +34,16 @@ class IntegrasjonTest : Testoppsett() {
     @Order(1)
     fun `mottar et vedtak som skal arkiveres`() {
         enqueFiler()
-        val journalpostResponse = JournalpostResponse(
-            dokumenter = emptyList(),
-            journalpostId = "jpostid123",
-            journalpostferdigstilt = true
-        )
-        val response = MockResponse()
-            .setBody(journalpostResponse.serialisertTilString())
-            .setHeader("Content-Type", MediaType.APPLICATION_JSON_VALUE)
+        val journalpostResponse =
+            JournalpostResponse(
+                dokumenter = emptyList(),
+                journalpostId = "jpostid123",
+                journalpostferdigstilt = true,
+            )
+        val response =
+            MockResponse()
+                .setBody(journalpostResponse.serialisertTilString())
+                .setHeader("Content-Type", MediaType.APPLICATION_JSON_VALUE)
         dokarkivMockWebServer.enqueue(response)
 
         kafkaProducer.send(
@@ -50,8 +51,8 @@ class IntegrasjonTest : Testoppsett() {
                 FLEX_VEDTAK_STATUS_TOPIC,
                 null,
                 fnr,
-                VedtakStatusDto(id = vedtakId, fnr = fnr, vedtakStatus = VedtakStatus.MOTATT).serialisertTilString()
-            )
+                VedtakStatusDto(id = vedtakId, fnr = fnr, vedtakStatus = VedtakStatus.MOTATT).serialisertTilString(),
+            ),
         ).get()
 
         await().atMost(10, TimeUnit.SECONDS).until {
@@ -86,8 +87,8 @@ class IntegrasjonTest : Testoppsett() {
                 FLEX_VEDTAK_STATUS_TOPIC,
                 null,
                 fnr,
-                VedtakStatusDto(id = vedtakId, fnr = fnr, vedtakStatus = VedtakStatus.MOTATT).serialisertTilString()
-            )
+                VedtakStatusDto(id = vedtakId, fnr = fnr, vedtakStatus = VedtakStatus.MOTATT).serialisertTilString(),
+            ),
         ).get()
 
         await().during(5, TimeUnit.SECONDS).until {
@@ -104,8 +105,8 @@ class IntegrasjonTest : Testoppsett() {
                 FLEX_VEDTAK_STATUS_TOPIC,
                 null,
                 fnr,
-                VedtakStatusDto(id = vedtakId, fnr = fnr, vedtakStatus = VedtakStatus.LEST).serialisertTilString()
-            )
+                VedtakStatusDto(id = vedtakId, fnr = fnr, vedtakStatus = VedtakStatus.LEST).serialisertTilString(),
+            ),
         ).get()
 
         await().during(5, TimeUnit.SECONDS).until {

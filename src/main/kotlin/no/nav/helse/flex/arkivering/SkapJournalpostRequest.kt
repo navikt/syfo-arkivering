@@ -11,38 +11,43 @@ fun skapJournalpostRequest(
     fnr: String,
     id: String,
     pdf: ByteArray,
-    tittel: String
+    tittel: String,
 ): JournalpostRequest {
     return JournalpostRequest(
-        bruker = Bruker(
-            id = fnr,
-            idType = "FNR"
-        ),
-        dokumenter = listOf(
-            Dokument(
-                dokumentvarianter = listOf(
-                    Dokumentvarianter(
-                        filnavn = tittel,
-                        filtype = "PDFA",
-                        variantformat = "ARKIV",
-                        fysiskDokument = pdf
-                    )
+        bruker =
+            Bruker(
+                id = fnr,
+                idType = "FNR",
+            ),
+        dokumenter =
+            listOf(
+                Dokument(
+                    dokumentvarianter =
+                        listOf(
+                            Dokumentvarianter(
+                                filnavn = tittel,
+                                filtype = "PDFA",
+                                variantformat = "ARKIV",
+                                fysiskDokument = pdf,
+                            ),
+                        ),
+                    tittel = tittel,
                 ),
-                tittel = tittel
-            )
-        ),
-        sak = Sak(
-            sakstype = "GENERELL_SAK"
-        ),
+            ),
+        sak =
+            Sak(
+                sakstype = "GENERELL_SAK",
+            ),
         kanal = "INGEN_DISTRIBUSJON",
         journalpostType = "UTGAAENDE",
         journalfoerendeEnhet = "9999",
         eksternReferanseId = id,
         tema = "SYK",
         tittel = tittel,
-        avsenderMottaker = AvsenderMottaker(
-            id = fnr,
-            idType = "FNR"
-        )
+        avsenderMottaker =
+            AvsenderMottaker(
+                id = fnr,
+                idType = "FNR",
+            ),
     )
 }

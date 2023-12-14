@@ -16,9 +16,8 @@ import org.springframework.web.bind.annotation.ResponseBody
 @Profile("testcontroller")
 class TestController(
     val arkivaren: PdfSkaperen,
-    val environmentToggles: EnvironmentToggles
+    val environmentToggles: EnvironmentToggles,
 ) {
-
     fun dobbeltsjekkProd() {
         if (environmentToggles.isProduction()) {
             throw RuntimeException("Disablet i produksjon")
@@ -27,7 +26,11 @@ class TestController(
 
     @ResponseBody
     @GetMapping(value = ["/api/test/html/{fnr}/{utbetalingId}"], produces = [MediaType.TEXT_HTML_VALUE])
-    fun hentHtml(@PathVariable fnr: String, @PathVariable utbetalingId: String, response: HttpServletResponse): String {
+    fun hentHtml(
+        @PathVariable fnr: String,
+        @PathVariable utbetalingId: String,
+        response: HttpServletResponse,
+    ): String {
         dobbeltsjekkProd()
         val hentSomHtmlOgInlineTing = arkivaren.hentSomHtmlOgInlineTing(fnr = fnr, id = utbetalingId)
         response.setHeader("x-nais-app-image", hentSomHtmlOgInlineTing.versjon)
@@ -39,7 +42,7 @@ class TestController(
     fun hentPdf(
         @PathVariable fnr: String,
         @PathVariable utbetalingId: String,
-        response: HttpServletResponse
+        response: HttpServletResponse,
     ): ByteArray {
         dobbeltsjekkProd()
         val hentPdf = arkivaren.hentPdf(fnr = fnr, id = utbetalingId)
