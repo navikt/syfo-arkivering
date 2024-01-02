@@ -29,7 +29,6 @@ abstract class Testoppsett {
 
     companion object {
         var spinnsynArkiveringFrontendMockWebServer: MockWebServer
-        var spinnsynBackendMockWebServer: MockWebServer
         var dokarkivMockWebServer: MockWebServer
 
         init {
@@ -52,13 +51,6 @@ abstract class Testoppsett {
                     .also { it.start() }
                     .also {
                         System.setProperty("spinnsyn.frontend.arkivering.url", "http://localhost:${it.port}")
-                    }
-
-            spinnsynBackendMockWebServer =
-                MockWebServer()
-                    .also { it.start() }
-                    .also {
-                        System.setProperty("spinnsyn.backend.url", "http://localhost:${it.port}")
                     }
 
             dokarkivMockWebServer =

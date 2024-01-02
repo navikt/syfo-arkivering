@@ -47,7 +47,6 @@ spec:
     outbound:
       rules:
         - application: spinnsyn-frontend-arkivering
-        - application: spinnsyn-backend
       external:
   {{#each external-host}}
         - host: {{this}}
