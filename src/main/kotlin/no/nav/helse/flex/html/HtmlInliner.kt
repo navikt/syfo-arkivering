@@ -4,7 +4,7 @@ import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Component
-import java.net.URL
+import java.net.URI
 import java.time.Clock
 import java.time.Instant
 import java.time.ZoneId
@@ -56,7 +56,7 @@ class HtmlInliner(
                         "$url$href"
                     }
                 val stylesheet =
-                    URL(adresse).readText()
+                    URI(adresse).toURL().readText()
                         .replace("@media print", "@media papirprint")
                         .replace("&", "&amp;")
 
