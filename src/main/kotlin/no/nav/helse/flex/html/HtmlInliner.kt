@@ -55,6 +55,8 @@ class HtmlInliner(
                     } else {
                         "$url$href"
                     }
+
+                @Suppress("DEPRECATION")
                 val stylesheet =
                     URI(adresse).toURL().readText()
                         .replace("@media print", "@media papirprint")
