@@ -10,6 +10,7 @@ import org.springframework.stereotype.Controller
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.ResponseBody
+import java.util.UUID
 
 @Controller
 @Unprotected
@@ -28,11 +29,11 @@ class TestController(
     @GetMapping(value = ["/api/test/html/{fnr}/{utbetalingId}"], produces = [MediaType.TEXT_HTML_VALUE])
     fun hentHtml(
         @PathVariable fnr: String,
-        @PathVariable utbetalingId: String,
+        @PathVariable utbetalingId: UUID,
         response: HttpServletResponse,
     ): String {
         dobbeltsjekkProd()
-        val hentSomHtmlOgInlineTing = arkivaren.hentSomHtmlOgInlineTing(fnr = fnr, id = utbetalingId)
+        val hentSomHtmlOgInlineTing = arkivaren.hentSomHtmlOgInlineTing(fnr = fnr, id = utbetalingId.toString())
         response.setHeader("x-nais-app-image", hentSomHtmlOgInlineTing.versjon)
         return hentSomHtmlOgInlineTing.html
     }
