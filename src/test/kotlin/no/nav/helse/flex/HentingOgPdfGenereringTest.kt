@@ -12,7 +12,7 @@ import java.time.Instant
 import java.time.OffsetDateTime
 import java.time.ZoneId
 
-class HentingOgPdfGenereringTest : Testoppsett() {
+class HentingOgPdfGenereringTest : FellesTestOppsett() {
     @Autowired
     lateinit var arkivaren: PdfSkaperen
 

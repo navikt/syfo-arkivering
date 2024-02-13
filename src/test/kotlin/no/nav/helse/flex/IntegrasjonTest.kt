@@ -23,7 +23,7 @@ import java.util.*
 import java.util.concurrent.TimeUnit
 
 @TestMethodOrder(MethodOrderer.OrderAnnotation::class)
-class IntegrasjonTest : Testoppsett() {
+class IntegrasjonTest : FellesTestOppsett() {
     @Autowired
     lateinit var kafkaProducer: KafkaProducer<String, String>
 

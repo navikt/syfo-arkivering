@@ -6,7 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired
 import java.io.File
 import java.time.OffsetDateTime
 
-class PdfTestHjelperTest : Testoppsett() {
+class PdfTestHjelperTest : FellesTestOppsett() {
     @Autowired
     lateinit var arkivaren: PdfSkaperen
 

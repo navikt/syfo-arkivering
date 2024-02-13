@@ -17,13 +17,13 @@ import org.testcontainers.containers.PostgreSQLContainer
 import org.testcontainers.utility.DockerImageName
 import org.verapdf.gf.foundry.VeraGreenfieldFoundryProvider
 
-private class PostgreSQLContainer12 : PostgreSQLContainer<PostgreSQLContainer12>("postgres:12-alpine")
+private class PostgreSQLContainer14 : PostgreSQLContainer<PostgreSQLContainer14>("postgres:14-alpine")
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @SpringBootTest
 @EnableMockOAuth2Server
 @AutoConfigureMockMvc
-abstract class Testoppsett {
+abstract class FellesTestOppsett {
     @Autowired
     lateinit var arkivertVedtakRepository: ArkivertVedtakRepository
 
@@ -34,14 +34,14 @@ abstract class Testoppsett {
         init {
             VeraGreenfieldFoundryProvider.initialise()
 
-            PostgreSQLContainer12().also {
+            PostgreSQLContainer14().also {
                 it.start()
                 System.setProperty("spring.datasource.url", it.jdbcUrl)
                 System.setProperty("spring.datasource.username", it.username)
                 System.setProperty("spring.datasource.password", it.password)
             }
 
-            KafkaContainer(DockerImageName.parse("confluentinc/cp-kafka:7.4.1")).also {
+            KafkaContainer(DockerImageName.parse("confluentinc/cp-kafka:7.5.3")).also {
                 it.start()
                 System.setProperty("KAFKA_BROKERS", it.bootstrapServers)
             }
