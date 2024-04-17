@@ -131,7 +131,7 @@ td {
 .navds-tag {
     display: inline-block;
 }
- .navds-tag.navds-tag--small {
+.navds-tag.navds-tag--small {
     padding-left: 4px;
     padding-right: 4px;
     font-size: 0.875rem;
@@ -141,11 +141,49 @@ td {
 }
 .navds-tag.navds-tag--success {
     border-color: #06893a;
-    min-width: 60px;
 }
- .navds-tag.navds-tag--warning {
+.navds-tag.navds-tag--warning {
     border-color: #d47b00;
 }
 .navds-tag.navds-tag--error {
     border-color: #c30000;
+}
+
+/* tekst styling */
+.navds-body-long.navds-typo--spacing {
+    margin-bottom: 2rem;
+}
+.navds-body-short.navds-typo--spacing {
+    margin-bottom: 1rem;
+}
+.navds-read-more__content {
+    border-left: 1px solid #838c9a;
+}
+
+/* panel styling */
+.navds-panel {
+    border: 1px solid #838c9a;
+    padding: 1rem;
+}
+
+/* expansion crad styling */
+.navds-expansioncard {
+    border: 1px solid #838c9a;
+    border-radius: 8px;
+    --__ac-expansioncard-border-width: 0;
+}
+.navds-expansioncard__header {
+    padding-top: 1rem;
+    --__ac-expansioncard-padding-block: 0;
+}
+.navds-expansioncard__content {
+    padding: 1rem;
+    --__ac-expansioncard-padding-block: 0;
+    --__ac-expansioncard-padding-inline: 0;
+}
+.navds-alert {
+    padding: 1rem;
+    border-radius: 4px;
+    --a-border-radius-medium: 0;
+    --a-spacing-4: 0;
 }
