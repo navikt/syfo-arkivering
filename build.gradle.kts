@@ -23,7 +23,7 @@ repositories {
 
 ext["okhttp3.version"] = "4.12" // Token-support tester trenger MockWebServer.
 
-val testContainersVersion = "1.19.8"
+val testContainersVersion = "1.20.0"
 val tokenSupportVersion = "4.1.7"
 val logstashLogbackEncoderVersion = "7.4"
 val kluentVersion = "1.73"
