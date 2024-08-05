@@ -2,7 +2,7 @@ import org.gradle.api.tasks.testing.logging.TestExceptionFormat
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 
 plugins {
-    id("org.springframework.boot") version "3.2.5"
+    id("org.springframework.boot") version "3.3.1"
     id("io.spring.dependency-management") version "1.1.6"
     id("org.jlleitschuh.gradle.ktlint") version "12.1.1"
     kotlin("plugin.spring") version "1.9.24"
@@ -24,7 +24,7 @@ repositories {
 ext["okhttp3.version"] = "4.12" // Token-support tester trenger MockWebServer.
 
 val testContainersVersion = "1.20.0"
-val tokenSupportVersion = "4.1.7"
+val tokenSupportVersion = "5.0.1"
 val logstashLogbackEncoderVersion = "7.4"
 val kluentVersion = "1.73"
 val openHtmlToPdfVersion = "1.0.10"
@@ -44,7 +44,7 @@ dependencies {
     implementation("org.hibernate.validator:hibernate-validator")
     implementation("org.springframework.kafka:spring-kafka")
     implementation("org.postgresql:postgresql")
-    implementation("org.flywaydb:flyway-core")
+    implementation("org.flywaydb:flyway-database-postgresql")
     implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
     implementation("org.aspectj:aspectjrt")
     implementation("org.aspectj:aspectjweaver")
