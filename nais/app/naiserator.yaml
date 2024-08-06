@@ -42,11 +42,9 @@ spec:
         tier: {{db_tier}}
         diskAutoresize: true
         databases:
-          - name: spinnsyn-arkivering-db
+          - name: syfo-arkivering-db
   accessPolicy:
     outbound:
-      rules:
-        - application: spinnsyn-frontend-arkivering
       external:
   {{#each external-host}}
         - host: {{this}}

@@ -1,1 +1,1 @@
-rootProject.name = "spinnsyn-arkivering"
+rootProject.name = "syfo-arkivering"

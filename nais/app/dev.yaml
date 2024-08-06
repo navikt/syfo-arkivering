@@ -1,17 +1,16 @@
 db_tier: db-f1-micro
-app: spinnsyn-arkivering
-namespace: flex
-team: flex
+app: syfo-arkivering
+namespace: team-esyfo
+team: team-esyfo
 kafkaPool: nav-dev
 azureTenant: trygdeetaten.no
-ingress: https://spinnsyn-arkivering.intern.dev.nav.no
+ingress: https://syfo-arkivering.intern.dev.nav.no
 cpu: 100m
 memory: 600Mi
 external-host:
   - dokarkiv.dev-fss-pub.nais.io
   - cdn.nav.no
 env:
-  SPINNSYN_FRONTEND_ARKIVERING_AAD_CLIENT_ID: dev-gcp.flex.spinnsyn-frontend-arkivering
   SPRING_PROFILES_ACTIVE: default,testcontroller
   DOKARKIV_AAD_CLIENT_ID: dev-fss.teamdokumenthandtering.dokarkiv-q1
   DOKARKIV_URL: https://dokarkiv.dev-fss-pub.nais.io

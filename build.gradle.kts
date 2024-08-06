@@ -9,9 +9,9 @@ plugins {
     kotlin("jvm") version "1.9.24"
 }
 
-group = "no.nav.helse.flex"
+group = "no.nav.helse.esyfo"
 version = "1.0.0"
-description = "spinnsyn-arkivering"
+description = "syfo-arkivering"
 java.sourceCompatibility = JavaVersion.VERSION_21
 
 repositories {
