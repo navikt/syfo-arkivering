@@ -1,0 +1,67 @@
+apiVersion: "nais.io/v1alpha1"
+kind: "Application"
+metadata:
+  name: syfo-arkivering
+  namespace: team-esyfo
+  labels:
+    team: team-esyfo
+spec:
+  image: {{ image }}
+  replicas:
+    min: 1
+    max: 2
+    cpuThresholdPercentage: 90
+  port: 8080
+  liveness:
+    path: /internal/health/livenessState
+    initialDelay: 10
+    timeout: 5
+    periodSeconds: 10
+    failureThreshold: 5
+  readiness:
+    path: /internal/health/readinessState
+    initialDelay: 10
+    periodSeconds: 5
+    timeout: 5
+  gcp:
+    sqlInstances:
+      - type: POSTGRES_15
+        databases:
+          - name: syfo-arkivering-db
+            envVarPrefix: DB
+        diskAutoresize: true
+  prometheus:
+    enabled: true
+    path: /internal/prometheus
+  observability:
+    autoInstrumentation:
+      enabled: true
+      runtime: "java"
+  resources:
+    limits:
+      memory: 600Mi
+    requests:
+      cpu: 400m
+      memory: 600Mi
+  ingresses:
+    - "https://syfo-arkivering.intern.dev.nav.no"
+  tokenx:
+    enabled: true
+  accessPolicy:
+    inbound:
+      rules:
+        - application: esyfo-proxy
+    outbound:
+      external:
+        - host: dokarkiv.dev-fss-pub.nais.io
+        - host: cdn.nav.no
+  env:
+    - name: SPRING_PROFILES_ACTIVE
+      value: "default,testcontroller"
+    - name: ESYFO_PROXY_CLIENT_ID
+      value: "dev-gcp:team-esyfo:esyfo-proxy"
+    - name: DOKARKIV_AAD_CLIENT_ID
+      value: dev-fss.teamdokumenthandtering.dokarkiv-q1
+    - name: DOKARKIV_URL
+      value: https://dokarkiv.dev-fss-pub.nais.io
+

@@ -4,7 +4,7 @@ import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 plugins {
     id("org.springframework.boot") version "3.3.2"
     id("io.spring.dependency-management") version "1.1.6"
-    id("org.jlleitschuh.gradle.ktlint") version "12.1.1"
+    id("io.gitlab.arturbosch.detekt") version "1.23.6"
     kotlin("plugin.spring") version "1.9.24"
     kotlin("jvm") version "1.9.24"
 }
@@ -32,6 +32,7 @@ val veraPdfVersion = "1.26.1"
 val jsoupVersion = "1.18.1"
 val mockitoKotlinVersion = "2.2.0"
 val jaxbRuntimeVersion = "2.4.0-b180830.0438"
+val detektVersion = "1.23.6"
 
 dependencies {
     implementation(platform("org.jetbrains.kotlin:kotlin-bom"))
@@ -66,6 +67,8 @@ dependencies {
     testImplementation("org.awaitility:awaitility")
     testImplementation("no.nav.security:token-validation-spring-test:$tokenSupportVersion")
     testImplementation("org.amshove.kluent:kluent:$kluentVersion")
+
+    detektPlugins("io.gitlab.arturbosch.detekt:detekt-formatting:$detektVersion")
 }
 
 kotlin {
@@ -94,4 +97,9 @@ tasks {
     bootJar {
         archiveFileName = "app.jar"
     }
+}
+
+detekt {
+    config.from("detekt-config.yml")
+    buildUponDefaultConfig = true
 }
